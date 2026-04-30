@@ -1,0 +1,130 @@
+"use client"
+
+import Image from "next/image"
+import { motion } from "framer-motion"
+
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+}
+
+export function Hero() {
+  const handleScrollToInscricao = () => {
+    const element = document.getElementById("inscricao")
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
+  return (
+    <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Video Background with Image Fallback */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="none"
+        poster="/hero-poster.jpg"
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        <source src="/hero.mp4" type="video/mp4" />
+      </video>
+      
+      {/* Static Image Fallback */}
+      <div 
+        className="absolute inset-0 w-full h-full bg-cover bg-center"
+        style={{ backgroundImage: "url('/hero-poster.jpg')" }}
+      />
+
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/30" />
+
+      {/* Content */}
+      <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+        <motion.div
+          {...fadeInUp}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          className="mb-8"
+        >
+          <span className="inline-block border border-white/40 text-white text-xs uppercase tracking-widest px-4 py-2 rounded-full">
+            2a Edicao - 2026
+          </span>
+        </motion.div>
+
+        <motion.div
+          {...fadeInUp}
+          transition={{ delay: 0.4, duration: 0.6 }}
+          className="mb-6"
+        >
+          <Image
+            src="/logo-light.png"
+            alt="REACT Brasil"
+            width={200}
+            height={80}
+            className="h-20 w-auto mx-auto"
+          />
+        </motion.div>
+
+        <motion.h1
+          {...fadeInUp}
+          transition={{ delay: 0.6, duration: 0.6 }}
+          className="font-serif text-5xl md:text-7xl font-light text-white mb-4 text-balance"
+        >
+          REACT Brasil
+        </motion.h1>
+
+        <motion.p
+          {...fadeInUp}
+          transition={{ delay: 0.8, duration: 0.6 }}
+          className="text-white/70 tracking-wider uppercase text-sm md:text-base mb-8"
+        >
+          Reestruturacao, Ativos, Credito e Transacao Tributaria
+        </motion.p>
+
+        <motion.p
+          {...fadeInUp}
+          transition={{ delay: 1.0, duration: 0.6 }}
+          className="text-white/60 max-w-xl mx-auto mb-10 leading-relaxed"
+        >
+          Um encontro reservado para os principais agentes do ecossistema de reestruturacao empresarial no Brasil.
+        </motion.p>
+
+        <motion.button
+          {...fadeInUp}
+          transition={{ delay: 1.2, duration: 0.6 }}
+          onClick={handleScrollToInscricao}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="border border-white text-white bg-transparent px-8 py-4 text-sm tracking-wider uppercase hover:bg-white hover:text-black transition-all duration-300 shadow-lg hover:shadow-xl"
+        >
+          Solicitar participacao
+        </motion.button>
+
+        <motion.p
+          {...fadeInUp}
+          transition={{ delay: 1.4, duration: 0.6 }}
+          className="text-white/40 text-xs tracking-widest uppercase mt-8"
+        >
+          Evento fechado - Participacao sujeita a aprovacao
+        </motion.p>
+      </div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2, duration: 1 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+      >
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+          className="w-6 h-10 border border-white/30 rounded-full flex items-start justify-center p-2"
+        >
+          <div className="w-1 h-2 bg-white/50 rounded-full" />
+        </motion.div>
+      </motion.div>
+    </section>
+  )
+}
