@@ -18,22 +18,22 @@ export function Hero() {
 
   return (
     <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Video Background with Image Fallback */}
+      {/* Video Background */}
       <video
         autoPlay
         muted
         loop
         playsInline
-        preload="none"
+        preload="auto"
         poster="/hero-poster.jpg"
         className="absolute inset-0 w-full h-full object-cover"
       >
-        <source src="/hero.mp4" type="video/mp4" />
+        <source src="https://xjj9t025ajqkncu8.public.blob.vercel-storage.com/hero.mp4" type="video/mp4" />
       </video>
-      
+
       {/* Static Image Fallback */}
-      <div 
-        className="absolute inset-0 w-full h-full bg-cover bg-center"
+      <div
+        className="absolute inset-0 w-full h-full bg-cover bg-center -z-10"
         style={{ backgroundImage: "url('/hero-poster.jpg')" }}
       />
 
@@ -48,7 +48,7 @@ export function Hero() {
           className="mb-8"
         >
           <span className="inline-block border border-white/40 text-white text-xs uppercase tracking-widest px-4 py-2 rounded-full">
-            2a Edicao - 2026
+            2ª Edição · 2026
           </span>
         </motion.div>
 
@@ -63,6 +63,8 @@ export function Hero() {
             width={200}
             height={80}
             className="h-20 w-auto mx-auto"
+            loading="eager"
+            priority
           />
         </motion.div>
 
@@ -79,7 +81,7 @@ export function Hero() {
           transition={{ delay: 0.8, duration: 0.6 }}
           className="text-white/70 tracking-wider uppercase text-sm md:text-base mb-8"
         >
-          Reestruturacao, Ativos, Credito e Transacao Tributaria
+          Reestruturação, Ativos, Crédito e Transação Tributária
         </motion.p>
 
         <motion.p
@@ -87,7 +89,7 @@ export function Hero() {
           transition={{ delay: 1.0, duration: 0.6 }}
           className="text-white/60 max-w-xl mx-auto mb-10 leading-relaxed"
         >
-          Um encontro reservado para os principais agentes do ecossistema de reestruturacao empresarial no Brasil.
+          Um encontro reservado para os principais agentes do ecossistema de reestruturação empresarial no Brasil.
         </motion.p>
 
         <motion.button
@@ -98,7 +100,7 @@ export function Hero() {
           whileTap={{ scale: 0.98 }}
           className="border border-white text-white bg-transparent px-8 py-4 text-sm tracking-wider uppercase hover:bg-white hover:text-black transition-all duration-300 shadow-lg hover:shadow-xl"
         >
-          Solicitar participacao
+          Solicitar participação
         </motion.button>
 
         <motion.p
@@ -106,7 +108,7 @@ export function Hero() {
           transition={{ delay: 1.4, duration: 0.6 }}
           className="text-white/40 text-xs tracking-widest uppercase mt-8"
         >
-          Evento fechado - Participacao sujeita a aprovacao
+          Evento fechado · Participação sujeita à aprovação
         </motion.p>
       </div>
 

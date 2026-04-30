@@ -52,9 +52,8 @@ export function Navbar() {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? "bg-white/95 backdrop-blur-sm shadow-sm" : "bg-transparent"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-white/95 backdrop-blur-sm shadow-sm" : "bg-transparent"
+        }`}
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
@@ -65,6 +64,7 @@ export function Navbar() {
               width={120}
               height={40}
               className="h-10 w-auto"
+              priority
             />
           </a>
 
@@ -75,19 +75,17 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleClick(e, link.href)}
-                className={`relative text-sm tracking-wide transition-colors ${
-                  scrolled
+                className={`relative text-sm tracking-wide transition-colors ${scrolled
                     ? "text-gray-600 hover:text-gray-900"
                     : "text-white/80 hover:text-white"
-                }`}
+                  }`}
               >
                 {link.label}
                 {activeSection === link.href.slice(1) && (
                   <motion.div
                     layoutId="activeSection"
-                    className={`absolute -bottom-1 left-0 right-0 h-px ${
-                      scrolled ? "bg-gray-900" : "bg-white"
-                    }`}
+                    className={`absolute -bottom-1 left-0 right-0 h-px ${scrolled ? "bg-gray-900" : "bg-white"
+                      }`}
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
