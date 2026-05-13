@@ -5,7 +5,7 @@ import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
 
-const images = Array.from({ length: 36 }, (_, i) => ({
+const images = Array.from({ length: 8 }, (_, i) => ({
   src: `/webp/react-2025-${String(i + 1).padStart(3, "0")}.webp`,
   alt: `REACT Brasil 2025 - Foto ${i + 1}`,
 }))
@@ -91,6 +91,24 @@ export function Galeria() {
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
             </motion.div>
           ))}
+        </motion.div>
+
+        {/* Ver tudo button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+          className="text-center mt-12"
+        >
+          <a
+            href="https://reactbrasil.com.br/evento-2025"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block border border-foreground/20 text-foreground px-8 py-4 text-sm tracking-wider uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
+          >
+            Ver tudo sobre o evento 2025
+          </a>
         </motion.div>
       </div>
 

@@ -35,7 +35,7 @@ export function Experiencia() {
               className="relative overflow-hidden rounded-lg group"
             >
               <Image
-                src="/highlight/highlight-2025-004.webp"
+                src="/highlight/experiencia-left.webp"
                 alt="Jantar REACT Brasil"
                 width={300}
                 height={400}
@@ -58,7 +58,7 @@ export function Experiencia() {
               className="relative overflow-hidden rounded-lg group"
             >
               <Image
-                src="/highlight/highlight-2025-005.webp"
+                src="/highlight/experiencia-right.webp"
                 alt="Jantar REACT Brasil"
                 width={300}
                 height={400}

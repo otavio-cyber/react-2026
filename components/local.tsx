@@ -86,7 +86,7 @@ export function Local() {
               className="overflow-hidden rounded-lg"
             >
               <Image
-                src="/highlight/highlight-2025-001.webp"
+                src="/highlight/local_img-above.webp"
                 alt="REACT Brasil 2025"
                 width={600}
                 height={400}
@@ -102,7 +102,7 @@ export function Local() {
                 className="overflow-hidden rounded-lg"
               >
                 <Image
-                  src="/highlight/highlight-2025-002.webp"
+                  src="/highlight/local-image-under-left.webp"
                   alt="REACT Brasil 2025"
                   width={300}
                   height={200}
@@ -117,7 +117,7 @@ export function Local() {
                 className="overflow-hidden rounded-lg"
               >
                 <Image
-                  src="/highlight/highlight-2025-003.webp"
+                  src="/highlight/local_image_under_right.webp"
                   alt="REACT Brasil 2025"
                   width={300}
                   height={200}

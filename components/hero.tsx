@@ -18,23 +18,10 @@ export function Hero() {
 
   return (
     <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Video Background */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        poster="/hero-poster.jpg"
-        className="absolute inset-0 w-full h-full object-cover"
-      >
-        <source src="https://xjj9t025ajqkncu8.public.blob.vercel-storage.com/hero.mp4" type="video/mp4" />
-      </video>
-
-      {/* Static Image Fallback */}
+      {/* Background Image */}
       <div
-        className="absolute inset-0 w-full h-full bg-cover bg-center -z-10"
-        style={{ backgroundImage: "url('/hero-poster.jpg')" }}
+        className="absolute inset-0 w-full h-full bg-cover bg-center"
+        style={{ backgroundImage: "url('/bg_hero.webp')" }}
       />
 
       {/* Overlay */}
