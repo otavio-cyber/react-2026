@@ -40,7 +40,7 @@ export function Inscricao() {
       })
 
       if (!response.ok) {
-        throw new Error("Erro ao enviar solicitacao")
+        throw new Error("Erro ao enviar solicitação")
       }
 
       setSuccess(true)
@@ -62,13 +62,13 @@ export function Inscricao() {
           className="text-center mb-12"
         >
           <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">
-            Solicitar Participacao
+            Solicitar Participação
           </p>
           <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-4">
-            Solicite sua participacao
+            Solicite sua participação
           </h2>
           <p className="text-muted-foreground">
-            Evento fechado. As inscricoes passam por analise e aprovacao.
+            Evento fechado. As inscrições passam por análise e aprovação.
           </p>
         </motion.div>
 
@@ -95,7 +95,7 @@ export function Inscricao() {
                 </svg>
               </div>
               <h3 className="font-serif text-2xl font-light text-foreground mb-2">
-                Solicitacao recebida
+                Solicitação recebida
               </h3>
               <p className="text-muted-foreground">
                 Entraremos em contato em breve.
@@ -158,7 +158,7 @@ export function Inscricao() {
                     Enviando...
                   </>
                 ) : (
-                  "Solicitar participacao"
+                  "Solicitar participação"
                 )}
               </motion.button>
             </motion.form>

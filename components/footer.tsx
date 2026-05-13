@@ -13,11 +13,11 @@ export function Footer() {
         />
 
         <p className="text-white/30 text-sm mb-2">
-          &copy; 2026 REACT Brasil - Todos os direitos reservados
+          &copy; {new Date().getFullYear()} REACT Brasil - Todos os direitos reservados
         </p>
 
         <p className="text-white/20 text-xs">
-          Realizacao: Triunfae - Bento Muniz Advogados
+          Realização: Triunfae - Bento Muniz Advogados
         </p>
       </div>
     </footer>

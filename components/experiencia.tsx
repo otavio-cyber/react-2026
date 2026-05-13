@@ -15,13 +15,13 @@ export function Experiencia() {
             viewport={{ once: true }}
           >
             <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">
-              Experiencia
+              Experiência
             </p>
             <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-6">
-              Jantar de Confraternizacao
+              Jantar de Confraternização
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              Ao final da programacao, o jantar de confraternizacao segue como parte essencial do REACT — um momento dedicado a interacao, conexao e aprofundamento das relacoes entre os participantes.
+              Ao final da programação, o jantar de confraternização segue como parte essencial do REACT — um momento dedicado à interação, conexão e aprofundamento das relações entre os participantes.
             </p>
           </motion.div>
 
@@ -69,7 +69,7 @@ export function Experiencia() {
                   initial={{ opacity: 0, y: 20 }}
                   className="text-white text-sm tracking-wide opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0"
                 >
-                  Conexoes de alto nivel
+                  Conexões de alto nível
                 </motion.p>
               </div>
             </motion.div>

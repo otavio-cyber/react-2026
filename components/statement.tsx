@@ -13,7 +13,7 @@ export function Statement() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="font-serif text-2xl md:text-4xl font-light text-white leading-relaxed"
         >
-          Participar do REACT e estar inserido onde as discussoes acontecem com profundidade e onde as conexoes geram consequencia.
+          Participar do REACT é estar inserido onde as discussões acontecem com profundidade e onde as conexões geram consequência.
         </motion.p>
       </div>
     </section>

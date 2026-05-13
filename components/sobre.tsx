@@ -6,13 +6,13 @@ import { Users, Target, Building2, Sparkles } from "lucide-react"
 const cards = [
   {
     icon: Users,
-    title: "Dois paineis tematicos",
-    subtitle: "Discussoes tecnicas e diretas",
+    title: "Dois painéis temáticos",
+    subtitle: "Discussões técnicas e diretas",
   },
   {
     icon: Target,
-    title: "Foco em execucao",
-    subtitle: "Tomada de decisao",
+    title: "Foco em execução",
+    subtitle: "Tomada de decisão",
   },
   {
     icon: Building2,
@@ -49,7 +49,7 @@ export function Sobre() {
               transition={{ delay: 0.1 }}
               className="font-serif text-3xl md:text-4xl font-light text-foreground mb-8 leading-tight text-balance"
             >
-              O encontro que antecede o principal congresso da America Latina
+              O encontro que antecede o principal congresso da América Latina
             </motion.h2>
 
             <div className="space-y-6 text-muted-foreground leading-relaxed">
@@ -59,7 +59,7 @@ export function Sobre() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
               >
-                O REACT Brasil nasce como um forum tecnico dedicado a reestruturacao e transformacao empresarial, reunindo profissionais que atuam diretamente nas decisoes mais relevantes do setor.
+                O REACT Brasil nasce como um fórum técnico dedicado à reestruturação e transformação empresarial, reunindo profissionais que atuam diretamente nas decisões mais relevantes do setor.
               </motion.p>
 
               <motion.p
@@ -68,7 +68,7 @@ export function Sobre() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 }}
               >
-                Apos uma primeira edicao que conectou especialistas de diferentes regioes do pais, investidores, advogados, gestores e representantes do setor publico, o evento evolui em 2026 como um ambiente ainda mais estruturado, focado em profundidade e execucao.
+                Após uma primeira edição que conectou especialistas de diferentes regiões do país, investidores, advogados, gestores e representantes do setor público, o evento evolui em 2026 como um ambiente ainda mais estruturado, focado em profundidade e execução.
               </motion.p>
 
               <motion.p
@@ -77,7 +77,7 @@ export function Sobre() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.4 }}
               >
-                Mais do que um encontro preparatorio para o TMA Brasil, o REACT se consolida como um espaco estrategico, reservado e altamente qualificado.
+                Mais do que um encontro preparatório para o TMA Brasil, o REACT se consolida como um espaço estratégico, reservado e altamente qualificado.
               </motion.p>
             </div>
           </div>
