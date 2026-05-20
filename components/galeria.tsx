@@ -6,14 +6,49 @@ import { motion, AnimatePresence } from "framer-motion"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
 
 const images = [
-  { src: "/webp/064_reactbrasil001.webp", alt: "REACT Brasil 2025 - 1", span: "col-span-2" },
-  { src: "/webp/090_reactbrasil001.webp", alt: "REACT Brasil 2025 - 2", span: "row-span-2" },
-  { src: "/webp/103_reactbrasil001.webp", alt: "REACT Brasil 2025 - 3", span: "row-span-2" },
-  { src: "/webp/124_reactbrasil001.webp", alt: "REACT Brasil 2025 - 4", span: "col-span-2" },
-  { src: "/webp/236_reactbrasil001.webp", alt: "REACT Brasil 2025 - 5", span: "row-span-2" },
-  { src: "/webp/258_reactbrasil001.webp", alt: "REACT Brasil 2025 - 6", span: "row-span-2" },
-  { src: "/webp/072_reactbrasil001.webp", alt: "REACT Brasil 2025 - 7", span: "" },
+  { src: "/webp/064_reactbrasil001.webp",          alt: "REACT Brasil 2025 - 1" },
+  { src: "/webp/090_reactbrasil001.webp",          alt: "REACT Brasil 2025 - 2" },
+  { src: "/webp/072_reactbrasil001.webp",          alt: "REACT Brasil 2025 - 3" },
+  { src: "/webp/103_reactbrasil001.webp",          alt: "REACT Brasil 2025 - 4" },
+  { src: "/webp/124_reactbrasil001.webp",          alt: "REACT Brasil 2025 - 5" },
+  { src: "/webp/236_reactbrasil001.webp",          alt: "REACT Brasil 2025 - 6" },
+  { src: "/webp/258_reactbrasil001.webp",          alt: "REACT Brasil 2025 - 7" },
+  { src: "/webp/jantar01_reactbrasil1.jpg.webp",   alt: "REACT Brasil 2025 - 8" },
+  { src: "/webp/jantar02_reactbrasil222.jpg.webp", alt: "REACT Brasil 2025 - 9" },
 ]
+
+const row1 = [0, 2]
+const row2 = [1, 3, 4]
+const row3 = [5, 6, 7, 8]
+
+function GaleriaItem({
+  image,
+  index,
+  className,
+  onClick,
+}: {
+  image: { src: string; alt: string }
+  index: number
+  className: string
+  onClick: (i: number) => void
+}) {
+  return (
+    <motion.div
+      variants={{ hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1 } }}
+      className={`relative overflow-hidden rounded-lg cursor-pointer group ${className}`}
+      onClick={() => onClick(index)}
+    >
+      <Image
+        src={image.src}
+        alt={image.alt}
+        fill
+        loading="lazy"
+        className="object-cover group-hover:scale-105 transition-transform duration-300"
+      />
+      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+    </motion.div>
+  )
+}
 
 export function Galeria() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
@@ -22,15 +57,13 @@ export function Galeria() {
   const closeLightbox = () => setSelectedIndex(null)
 
   const goToPrevious = useCallback(() => {
-    if (selectedIndex !== null) {
+    if (selectedIndex !== null)
       setSelectedIndex(selectedIndex === 0 ? images.length - 1 : selectedIndex - 1)
-    }
   }, [selectedIndex])
 
   const goToNext = useCallback(() => {
-    if (selectedIndex !== null) {
-      setSelectedIndex(selectedIndex === images.length - 1 ? 0 : selectedIndex + 1)
-    }
+    if (selectedIndex !== null)
+      setSelectedIndex(selectedIndex === images.length - 1 ? 0 : selectedIndex! + 1)
   }, [selectedIndex])
 
   useEffect(() => {
@@ -40,7 +73,6 @@ export function Galeria() {
       if (e.key === "ArrowLeft") goToPrevious()
       if (e.key === "ArrowRight") goToNext()
     }
-
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [selectedIndex, goToPrevious, goToNext])
@@ -54,9 +86,7 @@ export function Galeria() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">
-            Galeria
-          </p>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">Galeria</p>
           <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground">
             REACT Brasil 2025
           </h2>
@@ -70,28 +100,28 @@ export function Galeria() {
             hidden: { opacity: 0 },
             visible: { opacity: 1, transition: { staggerChildren: 0.05 } },
           }}
-          className="grid grid-cols-3 gap-4 auto-rows-[200px]"
+          className="space-y-4"
         >
-          {images.map((image, index) => (
-            <motion.div
-              key={image.src}
-              variants={{
-                hidden: { opacity: 0, scale: 0.95 },
-                visible: { opacity: 1, scale: 1 },
-              }}
-              className={`relative overflow-hidden rounded-lg cursor-pointer group ${image.span}`}
-              onClick={() => openLightbox(index)}
-            >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                loading="lazy"
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-            </motion.div>
-          ))}
+          {/* Linha 1: 2 paisagens */}
+          <div className="grid grid-cols-2 gap-4">
+            {row1.map((i) => (
+              <GaleriaItem key={images[i].src} image={images[i]} index={i} className="h-56" onClick={openLightbox} />
+            ))}
+          </div>
+
+          {/* Linha 2: 2 retratos + 1 paisagem */}
+          <div className="grid grid-cols-3 gap-4">
+            {row2.map((i) => (
+              <GaleriaItem key={images[i].src} image={images[i]} index={i} className="h-72" onClick={openLightbox} />
+            ))}
+          </div>
+
+          {/* Linha 3: 2 retratos + 2 paisagens */}
+          <div className="grid grid-cols-4 gap-4">
+            {row3.map((i) => (
+              <GaleriaItem key={images[i].src} image={images[i]} index={i} className="h-56" onClick={openLightbox} />
+            ))}
+          </div>
         </motion.div>
 
         {/* Ver tudo button */}
@@ -132,10 +162,7 @@ export function Galeria() {
             </button>
 
             <button
-              onClick={(e) => {
-                e.stopPropagation()
-                goToPrevious()
-              }}
+              onClick={(e) => { e.stopPropagation(); goToPrevious() }}
               className="absolute left-6 text-white/60 hover:text-white transition-colors"
               aria-label="Anterior"
             >
@@ -160,10 +187,7 @@ export function Galeria() {
             </motion.div>
 
             <button
-              onClick={(e) => {
-                e.stopPropagation()
-                goToNext()
-              }}
+              onClick={(e) => { e.stopPropagation(); goToNext() }}
               className="absolute right-6 text-white/60 hover:text-white transition-colors"
               aria-label="Proximo"
             >
@@ -171,7 +195,7 @@ export function Galeria() {
             </button>
 
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/60 text-sm">
-              {selectedIndex + 1} / {images.length}
+              {selectedIndex! + 1} / {images.length}
             </div>
           </motion.div>
         )}
