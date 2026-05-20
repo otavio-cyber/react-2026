@@ -7,9 +7,9 @@ export function Footer() {
         <Image
           src="/logo-light.png"
           alt="REACT Brasil"
-          width={100}
-          height={32}
-          className="h-8 w-auto mx-auto opacity-40 mb-6"
+          width={105}
+          height={34}
+          className="h-[34px] w-auto mx-auto opacity-40 mb-6"
         />
 
         <p className="text-white/30 text-sm mb-2">

@@ -67,11 +67,10 @@ export function Navbar() {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
           ? "bg-white/95 backdrop-blur-sm shadow-sm"
           : "bg-transparent"
-      }`}
+        }`}
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
@@ -80,11 +79,12 @@ export function Navbar() {
             onClick={(e) => handleClick(e, "#inicio")}
           >
             <Image
-              src={scrolled ? "/logo-dark.png" : "/logo-light.png"}
+              src="/logo-light.png"
               alt="REACT Brasil"
-              width={120}
-              height={40}
-              className="h-10 w-auto"
+              width={126}
+              height={42}
+              className="h-[61px] w-auto"
+              style={{ width: "auto" }}
               priority
             />
           </a>
@@ -105,11 +105,10 @@ export function Navbar() {
                   }
                   target={isExternal ? "_blank" : undefined}
                   rel={isExternal ? "noopener noreferrer" : undefined}
-                  className={`relative text-sm tracking-wide transition-colors ${
-                    scrolled
+                  className={`relative text-sm tracking-wide transition-colors ${scrolled
                       ? "text-gray-600 hover:text-gray-900"
                       : "text-white/80 hover:text-white"
-                  }`}
+                    }`}
                 >
                   {link.label}
 
@@ -117,11 +116,10 @@ export function Navbar() {
                     activeSection === link.href.slice(1) && (
                       <motion.div
                         layoutId="activeSection"
-                        className={`absolute -bottom-1 left-0 right-0 h-px ${
-                          scrolled
+                        className={`absolute -bottom-1 left-0 right-0 h-px ${scrolled
                             ? "bg-gray-900"
                             : "bg-white"
-                        }`}
+                          }`}
                         transition={{
                           type: "spring",
                           stiffness: 380,
@@ -139,11 +137,10 @@ export function Navbar() {
             onClick={() =>
               setMobileMenuOpen(!mobileMenuOpen)
             }
-            className={`md:hidden p-2 ${
-              scrolled
+            className={`md:hidden p-2 ${scrolled
                 ? "text-gray-900"
                 : "text-white"
-            }`}
+              }`}
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? (

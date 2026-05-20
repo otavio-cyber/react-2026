@@ -45,15 +45,16 @@ export function Hero() {
           className="mb-6"
         >
           <Image
-            src="/logo-light.png"
+            src="/logo-white.png"
             alt="REACT Brasil"
-            width={200}
-            height={80}
-            className="h-20 w-auto mx-auto"
+            width={400}
+            height={160}
+            className="h-50 w-auto mx-auto"
+            style={{ width: "auto" }}
             loading="eager"
             priority
           />
-        </motion.div>       
+        </motion.div>
 
         <motion.p
           {...fadeInUp}
