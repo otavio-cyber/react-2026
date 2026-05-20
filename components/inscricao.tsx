@@ -8,14 +8,16 @@ interface FormData {
   nome: string
   email: string
   empresa: string
+  whatsapp: string
 }
 
 export function Inscricao() {
   const [formData, setFormData] = useState<FormData>({
-    nome: "",
-    email: "",
-    empresa: "",
-  })
+  nome: "",
+  email: "",
+  empresa: "",
+  whatsapp: "",
+})
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -109,7 +111,7 @@ export function Inscricao() {
               onSubmit={handleSubmit}
               className="space-y-8"
             >
-              {(["nome", "email", "empresa"] as const).map((field) => (
+              {(["nome", "email", "empresa", "whatsapp"] as const).map((field) => (
                 <div key={field} className="relative">
                   <label
                     htmlFor={field}
@@ -119,10 +121,10 @@ export function Inscricao() {
                         : "top-2 text-foreground/40"
                     }`}
                   >
-                    {field === "nome" ? "Nome completo" : field === "email" ? "E-mail" : "Empresa"}
+                    {field === "nome" ? "Nome completo" : field === "email" ? "E-mail" : field === "empresa" ? "Empresa" : "WhatsApp"}
                   </label>
                   <input
-                    type={field === "email" ? "email" : "text"}
+                    type={field === "email" ? "email" : field === "whatsapp" ? "tel" : "text"}
                     id={field}
                     name={field}
                     value={formData[field]}

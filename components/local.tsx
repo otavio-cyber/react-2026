@@ -71,61 +71,61 @@ export function Local() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 border border-foreground/20 text-foreground px-6 py-3 text-sm tracking-wide hover:bg-foreground hover:text-background transition-colors"
             >
-              <MapPin className="w-4 h-4" />
+              <MapPin className="w-6 h-6" />
               Como chegar
             </motion.a>
           </div>
 
-          {/* Gallery */}
-          <div className="space-y-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="overflow-hidden rounded-lg"
-            >
-              <Image
-                src="/highlight/local_img-above.webp"
-                alt="REACT Brasil 2025"
-                width={600}
-                height={400}
-                className="w-full h-64 object-cover hover:scale-105 transition-transform duration-500"
-              />
-            </motion.div>
-            <div className="grid grid-cols-2 gap-4">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-                className="overflow-hidden rounded-lg"
-              >
-                <Image
-                  src="/highlight/local-image-under-left.webp"
-                  alt="REACT Brasil 2025"
-                  width={300}
-                  height={200}
-                  className="w-full h-40 object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4 }}
-                className="overflow-hidden rounded-lg"
-              >
-                <Image
-                  src="/highlight/local_image_under_right.webp"
-                  alt="REACT Brasil 2025"
-                  width={300}
-                  height={200}
-                  className="w-full h-40 object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </motion.div>
-            </div>
-          </div>
+         {/* Gallery */}
+<div className="flex flex-col gap-4">
+  <motion.div
+    initial={{ opacity: 0, scale: 0.95 }}
+    whileInView={{ opacity: 1, scale: 1 }}
+    viewport={{ once: true }}
+    transition={{ delay: 0.2 }}
+    className="overflow-hidden rounded-lg flex-1"
+  >
+    <Image
+      src="/highlight/local_img-above.webp"
+      alt="REACT Brasil 2025"
+      width={600}
+      height={400}
+      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+    />
+  </motion.div>
+  <div className="grid grid-cols-2 gap-4">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.3 }}
+      className="overflow-hidden rounded-lg"
+    >
+      <Image
+        src="/highlight/local-image-under-left.webp"
+        alt="REACT Brasil 2025"
+        width={300}
+        height={200}
+        className="w-full h-40 object-cover hover:scale-105 transition-transform duration-500"
+      />
+    </motion.div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.4 }}
+      className="overflow-hidden rounded-lg"
+    >
+      <Image
+        src="/highlight/local_image_under_right.webp"
+        alt="REACT Brasil 2025"
+        width={300}
+        height={200}
+        className="w-full h-40 object-cover hover:scale-105 transition-transform duration-500"
+      />
+    </motion.div>
+  </div>
+</div>
         </div>
       </div>
     </section>

@@ -53,23 +53,7 @@ export function Hero() {
             loading="eager"
             priority
           />
-        </motion.div>
-
-        <motion.h1
-          {...fadeInUp}
-          transition={{ delay: 0.6, duration: 0.6 }}
-          className="font-serif text-5xl md:text-7xl font-light text-white mb-4 text-balance"
-        >
-          REACT Brasil
-        </motion.h1>
-
-        <motion.p
-          {...fadeInUp}
-          transition={{ delay: 0.8, duration: 0.6 }}
-          className="text-white/70 tracking-wider uppercase text-sm md:text-base mb-8"
-        >
-          Reestruturação, Ativos, Crédito e Transação Tributária
-        </motion.p>
+        </motion.div>       
 
         <motion.p
           {...fadeInUp}
