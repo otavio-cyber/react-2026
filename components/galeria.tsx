@@ -5,10 +5,15 @@ import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
 
-const images = Array.from({ length: 8 }, (_, i) => ({
-  src: `/webp/react-2025-${String(i + 1).padStart(3, "0")}.webp`,
-  alt: `REACT Brasil 2025 - Foto ${i + 1}`,
-}))
+const images = [
+  { src: "/webp/064_reactbrasil001.webp", alt: "REACT Brasil 2025 - 1", span: "col-span-2" },
+  { src: "/webp/090_reactbrasil001.webp", alt: "REACT Brasil 2025 - 2", span: "row-span-2" },
+  { src: "/webp/103_reactbrasil001.webp", alt: "REACT Brasil 2025 - 3", span: "row-span-2" },
+  { src: "/webp/124_reactbrasil001.webp", alt: "REACT Brasil 2025 - 4", span: "col-span-2" },
+  { src: "/webp/236_reactbrasil001.webp", alt: "REACT Brasil 2025 - 5", span: "row-span-2" },
+  { src: "/webp/258_reactbrasil001.webp", alt: "REACT Brasil 2025 - 6", span: "row-span-2" },
+  { src: "/webp/072_reactbrasil001.webp", alt: "REACT Brasil 2025 - 7", span: "" },
+]
 
 export function Galeria() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
@@ -63,12 +68,9 @@ export function Galeria() {
           viewport={{ once: true }}
           variants={{
             hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: { staggerChildren: 0.05 },
-            },
+            visible: { opacity: 1, transition: { staggerChildren: 0.05 } },
           }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4"
+          className="grid grid-cols-3 gap-4 auto-rows-[200px]"
         >
           {images.map((image, index) => (
             <motion.div
@@ -77,16 +79,15 @@ export function Galeria() {
                 hidden: { opacity: 0, scale: 0.95 },
                 visible: { opacity: 1, scale: 1 },
               }}
-              className="relative overflow-hidden rounded-lg cursor-pointer group"
+              className={`relative overflow-hidden rounded-lg cursor-pointer group ${image.span}`}
               onClick={() => openLightbox(index)}
             >
               <Image
                 src={image.src}
                 alt={image.alt}
-                width={300}
-                height={200}
+                fill
                 loading="lazy"
-                className="w-full h-40 md:h-48 object-cover group-hover:scale-103 transition-transform duration-300"
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
             </motion.div>
@@ -150,8 +151,8 @@ export function Galeria() {
               className="max-w-5xl max-h-[80vh] relative"
             >
               <Image
-                src={images[selectedIndex].src}
-                alt={images[selectedIndex].alt}
+                src={images[selectedIndex!].src}
+                alt={images[selectedIndex!].alt}
                 width={1200}
                 height={800}
                 className="max-h-[80vh] w-auto object-contain"

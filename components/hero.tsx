@@ -25,7 +25,7 @@ export function Hero() {
       />
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/30" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/80 via-black/50 to-black/30" />
 
       {/* Content */}
       <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">

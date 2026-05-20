@@ -83,7 +83,7 @@ export function Navbar() {
               alt="REACT Brasil"
               width={126}
               height={42}
-              className="h-[61px] w-auto"
+              className="h-15.25 w-auto"
               style={{ width: "auto" }}
               priority
             />
