@@ -49,7 +49,7 @@ export function Hero() {
             alt="REACT Brasil"
             width={400}
             height={160}
-            className="h-50 w-auto mx-auto"
+            className="h-40 w-auto mx-auto"
             style={{ width: "auto" }}
             loading="eager"
             priority
