@@ -45,7 +45,7 @@ export function Hero() {
           className="mb-6"
         >
           <Image
-            src="/logo-white.png"
+            src="/logo_aprovado_branco.png"
             alt="REACT Brasil"
             width={400}
             height={160}
