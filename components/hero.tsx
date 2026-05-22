@@ -44,16 +44,16 @@ export function Hero() {
           transition={{ delay: 0.4, duration: 0.6 }}
           className="mb-6"
         >
-          <Image
-            src="/logo_aprovado_branco.png"
-            alt="REACT Brasil"
-            width={400}
-            height={160}
-            className="h-40 w-auto mx-auto"
-            style={{ width: "auto" }}
-            loading="eager"
-            priority
-          />
+          <div className="w-100 mx-auto">
+  <Image
+    src="/logo_aprovado_branco.png"
+    alt="REACT Brasil"
+    width={400}
+    height={160}
+    className="w-full h-auto"
+    priority
+  />
+</div>
         </motion.div>
 
         <motion.p
