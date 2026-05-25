@@ -6,6 +6,19 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "frame-ancestors 'self' https://triunfae.com.br",
+          },
+        ],
+      },
+    ]
+  },
 }
 
-export default nextConfig
+export default nextConfig 
