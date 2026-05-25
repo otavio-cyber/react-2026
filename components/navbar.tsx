@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
@@ -18,6 +18,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState("inicio")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const navRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,10 +30,8 @@ export function Navbar() {
 
       for (const section of sections.reverse()) {
         const element = document.getElementById(section)
-
         if (element) {
           const rect = element.getBoundingClientRect()
-
           if (rect.top <= 150) {
             setActiveSection(section)
             break
@@ -42,119 +41,122 @@ export function Navbar() {
     }
 
     window.addEventListener("scroll", handleScroll)
-
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const handleClick = (
+  // Fecha o menu ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setMobileMenuOpen(false)
+      }
+    }
+    if (mobileMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside)
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [mobileMenuOpen])
+
+  // Bloqueia scroll do body quando menu mobile está aberto
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : ""
+    return () => { document.body.style.overflow = "" }
+  }, [mobileMenuOpen])
+
+  const handleInternalClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string
   ) => {
     e.preventDefault()
-
-    const element = document.getElementById(href.slice(1))
-
-    if (element) {
-      element.scrollIntoView({
-        behavior: "smooth",
-      })
-    }
-
     setMobileMenuOpen(false)
+    setTimeout(() => {
+      const element = document.getElementById(href.slice(1))
+      if (element) element.scrollIntoView({ behavior: "smooth" })
+    }, 150)
   }
 
   return (
     <motion.nav
+      ref={navRef}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "bg-white/95 backdrop-blur-sm shadow-sm"
-          : "bg-transparent"
+        scrolled ? "bg-white/95 backdrop-blur-sm shadow-sm" : "bg-transparent"
       }`}
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
-          {/* Logo - aparece apenas após o scroll */}
-          <AnimatePresence mode="wait">
-            {scrolled && (
-              <motion.a
-                href="#inicio"
-                onClick={(e) => handleClick(e, "#inicio")}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Image
-                  src="/logo-light.png"
-                  alt="REACT Brasil"
-                  width={126}
-                  height={42}
-                  className="h-15.25 w-auto"
-                  style={{ width: "auto" }}
-                  priority
-                />
-              </motion.a>
-            )}
-          </AnimatePresence>
 
-          {/* Versão transparente do logo (sem link) - visível apenas antes do scroll */}
-          {!scrolled && (
-            <div className="flex items-center">
-              <Image
-                src="/logo-light.png"
-                alt="REACT Brasil"
-                width={126}
-                height={42}
-                className="h-15.25 w-auto opacity-0 pointer-events-none"
-                style={{ width: "auto" }}
-                priority
-                aria-hidden="true"
-              />
-            </div>
-          )}
+          {/* Logo — lado esquerdo, mantém espaço sempre */}
+          <div className="w-[126px] flex-shrink-0">
+            <AnimatePresence mode="wait">
+              {scrolled ? (
+                <motion.a
+                  key="logo-visible"
+                  href="#inicio"
+                  onClick={(e) => handleInternalClick(e, "#inicio")}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Image
+                    src="/logo-light.png"
+                    alt="REACT Brasil"
+                    width={126}
+                    height={42}
+                    className="h-auto w-auto"
+                    style={{ width: "auto" }}
+                    priority
+                  />
+                </motion.a>
+              ) : (
+                <motion.div
+                  key="logo-hidden"
+                  aria-hidden="true"
+                  className="opacity-0 pointer-events-none"
+                >
+                  <Image
+                    src="/logo-light.png"
+                    alt=""
+                    width={126}
+                    height={42}
+                    className="h-auto w-auto"
+                    style={{ width: "auto" }}
+                    priority
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-8 flex-nowrap">
             {navLinks.map((link) => {
               const isExternal = link.href.startsWith("http")
-
               return (
                 <a
                   key={link.href}
                   href={link.href}
-                  onClick={
-                    isExternal
-                      ? undefined
-                      : (e) => handleClick(e, link.href)
-                  }
+                  onClick={isExternal ? undefined : (e) => handleInternalClick(e, link.href)}
                   target={isExternal ? "_blank" : undefined}
                   rel={isExternal ? "noopener noreferrer" : undefined}
-                  className={`relative text-sm tracking-wide transition-colors ${
+                  className={`relative text-sm tracking-wide transition-colors whitespace-nowrap ${
                     scrolled
                       ? "text-gray-600 hover:text-gray-900"
                       : "text-white/80 hover:text-white"
                   }`}
                 >
                   {link.label}
-
-                  {!isExternal &&
-                    activeSection === link.href.slice(1) && (
-                      <motion.div
-                        layoutId="activeSection"
-                        className={`absolute -bottom-1 left-0 right-0 h-px ${
-                          scrolled
-                            ? "bg-gray-900"
-                            : "bg-white"
-                        }`}
-                        transition={{
-                          type: "spring",
-                          stiffness: 380,
-                          damping: 30,
-                        }}
-                      />
-                    )}
+                  {!isExternal && activeSection === link.href.slice(1) && (
+                    <motion.div
+                      layoutId="activeSection"
+                      className={`absolute -bottom-1 left-0 right-0 h-px ${
+                        scrolled ? "bg-gray-900" : "bg-white"
+                      }`}
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  )}
                 </a>
               )
             })}
@@ -162,21 +164,40 @@ export function Navbar() {
 
           {/* Mobile Menu Button */}
           <button
-            onClick={() =>
-              setMobileMenuOpen(!mobileMenuOpen)
-            }
-            className={`md:hidden p-2 ${
-              scrolled
-                ? "text-gray-900"
-                : "text-white"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            className={`md:hidden p-2 rounded-md transition-colors ${
+              scrolled || mobileMenuOpen
+                ? "text-gray-900 hover:bg-gray-100"
+                : "text-white hover:bg-white/10"
             }`}
-            aria-label="Toggle menu"
+            aria-label={mobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+            aria-expanded={mobileMenuOpen}
           >
-            {mobileMenuOpen ? (
-              <X size={24} />
-            ) : (
-              <Menu size={24} />
-            )}
+            <AnimatePresence mode="wait" initial={false}>
+              {mobileMenuOpen ? (
+                <motion.span
+                  key="close"
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="block"
+                >
+                  <X size={24} />
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="open"
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="block"
+                >
+                  <Menu size={24} />
+                </motion.span>
+              )}
+            </AnimatePresence>
           </button>
         </div>
       </div>
@@ -184,41 +205,61 @@ export function Navbar() {
       {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-t border-gray-100"
-          >
-            <div className="px-6 py-4 flex flex-col gap-4">
-              {navLinks.map((link) => {
-                const isExternal = link.href.startsWith("http")
+          <>
+            {/* Backdrop */}
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden fixed inset-0 top-20 bg-black/40 z-40"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-hidden="true"
+            />
 
-                return (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    onClick={
-                      isExternal
-                        ? () => setMobileMenuOpen(false)
-                        : (e) => handleClick(e, link.href)
-                    }
-                    target={
-                      isExternal ? "_blank" : undefined
-                    }
-                    rel={
-                      isExternal
-                        ? "noopener noreferrer"
-                        : undefined
-                    }
-                    className="text-gray-900 text-sm tracking-wide py-2"
-                  >
-                    {link.label}
-                  </a>
-                )
-              })}
-            </div>
-          </motion.div>
+            {/* Menu panel */}
+            <motion.div
+              key="mobile-menu"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="md:hidden relative z-50 bg-white border-t border-gray-100 shadow-lg"
+            >
+              <div className="px-6 py-4 flex flex-col">
+                {navLinks.map((link, index) => {
+                  const isExternal = link.href.startsWith("http")
+                  return (
+                    <motion.a
+                      key={link.href}
+                      href={link.href}
+                      initial={{ opacity: 0, x: -16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.04, duration: 0.2 }}
+                      onClick={
+                        isExternal
+                          ? () => setMobileMenuOpen(false)
+                          : (e) => handleInternalClick(e, link.href)
+                      }
+                      target={isExternal ? "_blank" : undefined}
+                      rel={isExternal ? "noopener noreferrer" : undefined}
+                      className={`flex items-center justify-between text-sm tracking-wide py-3.5 border-b border-gray-50 last:border-0 transition-colors ${
+                        !isExternal && activeSection === link.href.slice(1)
+                          ? "text-gray-900 font-medium"
+                          : "text-gray-600 hover:text-gray-900"
+                      }`}
+                    >
+                      {link.label}
+                      {isExternal && (
+                        <span className="text-xs text-gray-400 ml-2">↗</span>
+                      )}
+                    </motion.a>
+                  )
+                })}
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </motion.nav>
