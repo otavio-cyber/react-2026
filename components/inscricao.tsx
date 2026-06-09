@@ -13,11 +13,11 @@ interface FormData {
 
 export function Inscricao() {
   const [formData, setFormData] = useState<FormData>({
-  nome: "",
-  email: "",
-  empresa: "",
-  whatsapp: "",
-})
+    nome: "",
+    email: "",
+    empresa: "",
+    whatsapp: "",
+  })
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -35,7 +35,7 @@ export function Inscricao() {
     setError(null)
 
     try {
-      const response = await fetch("/api/cadastro", {
+      const response = await fetch("https://formspree.io/f/xvznrlpr", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -115,11 +115,10 @@ export function Inscricao() {
                 <div key={field} className="relative">
                   <label
                     htmlFor={field}
-                    className={`absolute left-0 transition-all duration-200 pointer-events-none ${
-                      focusedField === field || formData[field]
+                    className={`absolute left-0 transition-all duration-200 pointer-events-none ${focusedField === field || formData[field]
                         ? "-top-5 text-xs text-muted-foreground"
                         : "top-2 text-foreground/40"
-                    }`}
+                      }`}
                   >
                     {field === "nome" ? "Nome completo" : field === "email" ? "E-mail" : field === "empresa" ? "Empresa" : "WhatsApp"}
                   </label>
