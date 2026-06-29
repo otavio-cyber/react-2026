@@ -45,15 +45,15 @@ export function Hero() {
           className="mb-6"
         >
           <div className="w-100 mx-auto">
-  <Image
-    src="/logo_aprovado_branco.png"
-    alt="REACT Brasil"
-    width={400}
-    height={160}
-    className="w-full h-auto"
-    priority
-  />
-</div>
+            <Image
+              src="/logo_aprovado_branco.png"
+              alt="REACT Brasil"
+              width={400}
+              height={160}
+              className="w-full h-auto"
+              priority
+            />
+          </div>
         </motion.div>
 
         <motion.p
@@ -67,8 +67,7 @@ export function Hero() {
         <motion.button
           {...fadeInUp}
           transition={{ delay: 1.2, duration: 0.6 }}
-          onClick={handleScrollToInscricao}
-          whileHover={{ scale: 1.02 }}
+          onClick={() => window.open("https://www.sympla.com.br/evento/ii-react-brasil/3463666?_gl=1*1ftvvtk*_gcl_au*MTU2NDEyNzg2Ny4xNzgxMjk0ODQw*_ga*MTU0Njg0OTYzLjE3ODEyOTQ4NDA.*_ga_KXH10SQTZF*czE3ODI3NjY0MjMkbzUkZzEkdDE3ODI3NjY2NzEkajU1JGwwJGgyODYxNDA1NDk.", "_blank")} whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className="border border-white text-white bg-transparent px-8 py-4 text-sm tracking-wider uppercase hover:bg-white hover:text-black transition-all duration-300 shadow-lg hover:shadow-xl"
         >

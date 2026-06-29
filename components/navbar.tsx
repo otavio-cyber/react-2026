@@ -11,7 +11,7 @@ const navLinks = [
   { href: "https://evento2025.reactbrasil.com.br", label: "Evento 2025" },
   { href: "#local", label: "Local e Data" },
   { href: "#apoio", label: "Apoio Institucional" },
-  { href: "#inscricao", label: "Inscrição" },
+  { href: "https://www.sympla.com.br/evento/ii-react-brasil/3463666?_gl=1*1ftvvtk*_gcl_au*MTU2NDEyNzg2Ny4xNzgxMjk0ODQw*_ga*MTU0Njg0OTYzLjE3ODEyOTQ4NDA.*_ga_KXH10SQTZF*czE3ODI3NjY0MjMkbzUkZzEkdDE3ODI3NjY2NzEkajU1JGwwJGgyODYxNDA1NDk.", label: "Inscrição" },
 ]
 
 export function Navbar() {
@@ -80,9 +80,8 @@ export function Navbar() {
       ref={navRef}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? "bg-white/95 backdrop-blur-sm shadow-sm" : "bg-transparent"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-white/95 backdrop-blur-sm shadow-sm" : "bg-transparent"
+        }`}
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
@@ -141,19 +140,17 @@ export function Navbar() {
                   onClick={isExternal ? undefined : (e) => handleInternalClick(e, link.href)}
                   target={isExternal ? "_blank" : undefined}
                   rel={isExternal ? "noopener noreferrer" : undefined}
-                  className={`relative text-sm tracking-wide transition-colors whitespace-nowrap ${
-                    scrolled
+                  className={`relative text-sm tracking-wide transition-colors whitespace-nowrap ${scrolled
                       ? "text-gray-600 hover:text-gray-900"
                       : "text-white/80 hover:text-white"
-                  }`}
+                    }`}
                 >
                   {link.label}
                   {!isExternal && activeSection === link.href.slice(1) && (
                     <motion.div
                       layoutId="activeSection"
-                      className={`absolute -bottom-1 left-0 right-0 h-px ${
-                        scrolled ? "bg-gray-900" : "bg-white"
-                      }`}
+                      className={`absolute -bottom-1 left-0 right-0 h-px ${scrolled ? "bg-gray-900" : "bg-white"
+                        }`}
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}
@@ -165,11 +162,10 @@ export function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className={`md:hidden p-2 rounded-md transition-colors ${
-              scrolled || mobileMenuOpen
+            className={`md:hidden p-2 rounded-md transition-colors ${scrolled || mobileMenuOpen
                 ? "text-gray-900 hover:bg-gray-100"
                 : "text-white hover:bg-white/10"
-            }`}
+              }`}
             aria-label={mobileMenuOpen ? "Fechar menu" : "Abrir menu"}
             aria-expanded={mobileMenuOpen}
           >
@@ -244,11 +240,10 @@ export function Navbar() {
                       }
                       target={isExternal ? "_blank" : undefined}
                       rel={isExternal ? "noopener noreferrer" : undefined}
-                      className={`flex items-center justify-between text-sm tracking-wide py-3.5 border-b border-gray-50 last:border-0 transition-colors ${
-                        !isExternal && activeSection === link.href.slice(1)
+                      className={`flex items-center justify-between text-sm tracking-wide py-3.5 border-b border-gray-50 last:border-0 transition-colors ${!isExternal && activeSection === link.href.slice(1)
                           ? "text-gray-900 font-medium"
                           : "text-gray-600 hover:text-gray-900"
-                      }`}
+                        }`}
                     >
                       {link.label}
                       {isExternal && (
