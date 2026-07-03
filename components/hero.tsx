@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { motion } from "framer-motion"
+import { openInscricaoModal } from "@/lib/inscricao-modal"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -9,13 +10,6 @@ const fadeInUp = {
 }
 
 export function Hero() {
-  const handleScrollToInscricao = () => {
-    const element = document.getElementById("inscricao")
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
-    }
-  }
-
   return (
     <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
@@ -67,7 +61,7 @@ export function Hero() {
         <motion.button
           {...fadeInUp}
           transition={{ delay: 1.2, duration: 0.6 }}
-          onClick={() => window.open("https://www.sympla.com.br/evento/ii-react-brasil/3463666?_gl=1*1ftvvtk*_gcl_au*MTU2NDEyNzg2Ny4xNzgxMjk0ODQw*_ga*MTU0Njg0OTYzLjE3ODEyOTQ4NDA.*_ga_KXH10SQTZF*czE3ODI3NjY0MjMkbzUkZzEkdDE3ODI3NjY2NzEkajU1JGwwJGgyODYxNDA1NDk.", "_blank")} whileHover={{ scale: 1.02 }}
+          onClick={openInscricaoModal} whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className="border border-white text-white bg-transparent px-8 py-4 text-sm tracking-wider uppercase hover:bg-white hover:text-black transition-all duration-300 shadow-lg hover:shadow-xl"
         >

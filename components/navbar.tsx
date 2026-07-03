@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
+import { openInscricaoModal } from "@/lib/inscricao-modal"
 
 const navLinks = [
   { href: "#inicio", label: "Início" },
@@ -11,7 +12,6 @@ const navLinks = [
   { href: "https://evento2025.reactbrasil.com.br", label: "Evento 2025" },
   { href: "#local", label: "Local e Data" },
   { href: "#apoio", label: "Apoio Institucional" },
-  { href: "https://www.sympla.com.br/evento/ii-react-brasil/3463666?_gl=1*1ftvvtk*_gcl_au*MTU2NDEyNzg2Ny4xNzgxMjk0ODQw*_ga*MTU0Njg0OTYzLjE3ODEyOTQ4NDA.*_ga_KXH10SQTZF*czE3ODI3NjY0MjMkbzUkZzEkdDE3ODI3NjY2NzEkajU1JGwwJGgyODYxNDA1NDk.", label: "Inscrição" },
 ]
 
 export function Navbar() {
@@ -157,6 +157,15 @@ export function Navbar() {
                 </a>
               )
             })}
+            <button
+              onClick={openInscricaoModal}
+              className={`text-sm tracking-wide transition-colors whitespace-nowrap border px-4 py-2 rounded-full ${scrolled
+                  ? "border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white"
+                  : "border-white/60 text-white hover:bg-white hover:text-black"
+                }`}
+            >
+              Inscrição
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -252,6 +261,18 @@ export function Navbar() {
                     </motion.a>
                   )
                 })}
+                <motion.button
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: navLinks.length * 0.04, duration: 0.2 }}
+                  onClick={() => {
+                    setMobileMenuOpen(false)
+                    openInscricaoModal()
+                  }}
+                  className="text-left text-sm tracking-wide py-3.5 text-gray-900 font-medium"
+                >
+                  Inscrição
+                </motion.button>
               </div>
             </motion.div>
           </>

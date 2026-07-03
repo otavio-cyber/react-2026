@@ -37,7 +37,7 @@ export function Local() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
               >
-                O Tivoli Mofarrej foi novamente escolhido como sede do II REACT Brasil, reforcando o posicionamento do evento em um ambiente que combina excelencia, tradicao e infraestrutura de alto padrao.
+                O Tivoli Mofarrej foi novamente escolhido como sede do II REACT Brasil, reforçando o posicionamento do evento em um ambiente que combina excelência, tradição e infraestrutura de alto padrão.
               </motion.p>
 
               <motion.p
@@ -46,7 +46,7 @@ export function Local() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 }}
               >
-                Para esta edicao, o REACT evolui tambem em sua experiencia: o encontro sera realizado em um auditorio ainda mais amplo, proporcionando maior conforto e melhor dinamica para os debates, sem perder o carater reservado e qualificado que marca o evento.
+                Para esta edição, o REACT evolui também em sua experiência: o encontro será realizado em um auditório ainda mais amplo, proporcionando maior conforto e melhor dinâmica para os debates, sem perder o caráter reservado e qualificado que marca o evento.
               </motion.p>
             </div>
 
@@ -58,7 +58,8 @@ export function Local() {
               className="mb-8"
             >
               <p className="text-2xl font-light text-foreground mb-1">02 de novembro de 2026</p>
-              <p className="text-muted-foreground">Sao Paulo — SP</p>
+              <p className="text-muted-foreground mb-1">16h às 22h</p>
+              <p className="text-muted-foreground">São Paulo — SP</p>
             </motion.div>
 
             <motion.a

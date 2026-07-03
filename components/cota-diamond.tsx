@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Check } from "lucide-react"
+import { openInscricaoModal } from "@/lib/inscricao-modal"
 
 const benefits = [
   "Palestrante em painel do evento",
@@ -13,13 +14,6 @@ const benefits = [
 ]
 
 export function CotaDiamond() {
-  const handleScrollToInscricao = () => {
-    const element = document.getElementById("inscricao")
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
-    }
-  }
-
   return (
     <section className="py-24 md:py-32 bg-gray-950 relative overflow-hidden">
       {/* Decorative top border */}
@@ -74,7 +68,7 @@ export function CotaDiamond() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
-              onClick={() => window.open("https://www.sympla.com.br/evento/ii-react-brasil/3463666?_gl=1*1ftvvtk*_gcl_au*MTU2NDEyNzg2Ny4xNzgxMjk0ODQw*_ga*MTU0Njg0OTYzLjE3ODEyOTQ4NDA.*_ga_KXH10SQTZF*czE3ODI3NjY0MjMkbzUkZzEkdDE3ODI3NjY2NzEkajU1JGwwJGgyODYxNDA1NDk.", "_blank")}
+              onClick={openInscricaoModal}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="border border-white text-white bg-transparent px-8 py-4 text-sm tracking-wider uppercase hover:bg-white hover:text-black transition-all duration-300"

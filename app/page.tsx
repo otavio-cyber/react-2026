@@ -20,8 +20,8 @@ export default function HomePage() {
       <Local />
       <Experiencia />
       <Galeria />
-      <Inscricao />
       <Footer />
+      <Inscricao />
     </main>
   )
 }
