@@ -7,16 +7,42 @@ import { INSCRICAO_MODAL_EVENT } from "@/lib/inscricao-modal"
 
 interface FormData {
   nome: string
+  sobrenome: string
+  celular: string
   email: string
+  cpf: string
   empresa: string
-  whatsapp: string
+  cargo: string
 }
 
 const initialFormData: FormData = {
   nome: "",
+  sobrenome: "",
+  celular: "",
   email: "",
+  cpf: "",
   empresa: "",
-  whatsapp: "",
+  cargo: "",
+}
+
+const fieldLabels: Record<keyof FormData, string> = {
+  nome: "Nome",
+  sobrenome: "Sobrenome",
+  celular: "Celular",
+  email: "E-mail",
+  cpf: "CPF",
+  empresa: "Empresa",
+  cargo: "Cargo",
+}
+
+const fieldTypes: Record<keyof FormData, string> = {
+  nome: "text",
+  sobrenome: "text",
+  celular: "tel",
+  email: "email",
+  cpf: "text",
+  empresa: "text",
+  cargo: "text",
 }
 
 export function Inscricao() {
@@ -182,7 +208,7 @@ export function Inscricao() {
                   onSubmit={handleSubmit}
                   className="space-y-8"
                 >
-                  {(["nome", "email", "empresa", "whatsapp"] as const).map((field) => (
+                  {(["nome", "sobrenome", "celular", "email", "cpf", "empresa", "cargo"] as const).map((field) => (
                     <div key={field} className="relative">
                       <label
                         htmlFor={field}
@@ -191,10 +217,10 @@ export function Inscricao() {
                             : "top-2 text-foreground/40"
                           }`}
                       >
-                        {field === "nome" ? "Nome completo" : field === "email" ? "E-mail" : field === "empresa" ? "Empresa" : "WhatsApp"}
+                        {fieldLabels[field]}
                       </label>
                       <input
-                        type={field === "email" ? "email" : field === "whatsapp" ? "tel" : "text"}
+                        type={fieldTypes[field]}
                         id={field}
                         name={field}
                         value={formData[field]}
