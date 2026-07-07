@@ -80,10 +80,10 @@ export function Inscricao() {
 
             <div className="text-center mb-6 px-4 sm:px-8">
               <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">
-                Solicitar Participação
+                Pré Cadastro
               </p>
               <h2 className="font-serif text-3xl font-light text-foreground mb-4">
-                Solicite sua participação
+                React Brasil
               </h2>
               <p className="text-muted-foreground text-sm">
                 Evento fechado. As inscrições passam por análise e aprovação.
