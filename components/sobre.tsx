@@ -45,7 +45,7 @@ export function Sobre() {
               transition={{ delay: 0.2 }}
               className="text-muted-foreground leading-relaxed"
             >
-              O REACT Brasil nasce como um fórum técnico dedicado à reestruturação e transformação
+              O REACT Brasil é um fórum técnico dedicado à reestruturação e transformação
               empresarial, reunindo profissionais que atuam diretamente nas decisões mais relevantes
               do setor.
             </motion.p>
