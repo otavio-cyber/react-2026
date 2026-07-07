@@ -18,7 +18,7 @@ export function Footer() {
         </p>
 
         <p className="text-white/20 text-xs">
-          Realização: Triunfae - Bento Muniz Advogados
+          Realização: Triunfae 
         </p>
       </div>
     </footer>

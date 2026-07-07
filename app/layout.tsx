@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description: 'Um encontro reservado para os principais agentes do ecossistema de reestruturação empresarial no Brasil. 02 de novembro de 2026 - Tivoli Mofarrej, São Paulo.',
   generator: 'v0.app',
   keywords: ['REACT Brasil', 'reestruturação empresarial', 'TMA Brasil', 'transação tributária', 'crédito', 'ativos'],
-  authors: [{ name: 'Triunfae' }, { name: 'Bento Muniz Advogados' }],
+  authors: [{ name: 'Triunfae' }],
   openGraph: {
     title: 'REACT Brasil 2026',
     description: 'O encontro que antecede o principal congresso da América Latina',
