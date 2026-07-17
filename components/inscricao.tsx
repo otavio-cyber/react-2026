@@ -2,16 +2,14 @@
 
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Loader2, X } from "lucide-react"
+import { X } from "lucide-react"
 import { INSCRICAO_MODAL_EVENT } from "@/lib/inscricao-modal"
 
-// URL do Google Forms em modo embutido (iframe)
-const GOOGLE_FORM_EMBED_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSfcSoRykQ1s-8s5VJJNyjkuvCRQKX_XRMqa_EqHKCZ_lELIuQ/viewform?embedded=true"
+const CONTATO_EMAIL = "renata.abrahao@triunfae.com.br"
+const CONTATO_ASSUNTO = "Quero Participar do React Brasil 2026"
 
 export function Inscricao() {
   const [open, setOpen] = useState(false)
-  const [iframeLoading, setIframeLoading] = useState(true)
 
   // Abre o modal quando qualquer botão de "Inscrição" dispara o evento global
   useEffect(() => {
@@ -39,10 +37,6 @@ export function Inscricao() {
 
   const handleClose = () => {
     setOpen(false)
-    // Reseta o estado do iframe após a animação de saída
-    setTimeout(() => {
-      setIframeLoading(true)
-    }, 300)
   }
 
   return (
@@ -90,24 +84,19 @@ export function Inscricao() {
               </p>
             </div>
 
-            <div className="relative w-full" style={{ minHeight: iframeLoading ? "400px" : "auto" }}>
-              {iframeLoading && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Loader2 className="w-6 h-6 animate-spin text-foreground/40" />
-                </div>
-              )}
-              <iframe
-                title="Formulário de inscrição"
-                src={GOOGLE_FORM_EMBED_URL}
-                onLoad={() => setIframeLoading(false)}
-                className="w-full"
-                style={{ height: 900, opacity: iframeLoading ? 0 : 1, transition: "opacity 0.3s ease" }}
-                frameBorder={0}
-                marginHeight={0}
-                marginWidth={0}
-              >
-                Carregando…
-              </iframe>
+            <div className="px-4 sm:px-8 pb-2">
+              <p className="text-foreground/90 text-base leading-relaxed text-center">
+                O seu convite para o React Brasil é pessoal e intransferível, por favor envie
+                email para{" "}
+                <a
+                  href={`mailto:${CONTATO_EMAIL}?subject=${encodeURIComponent(CONTATO_ASSUNTO)}`}
+                  className="font-medium text-foreground underline underline-offset-4 hover:text-foreground/70 transition-colors"
+                >
+                  {CONTATO_EMAIL}
+                </a>{" "}
+                com o assunto: <span className="font-medium text-foreground">"{CONTATO_ASSUNTO}"</span>{" "}
+                que faremos a sua inscrição.
+              </p>
             </div>
           </motion.div>
         </div>
