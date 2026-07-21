@@ -2,16 +2,15 @@
 
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Loader2, X } from "lucide-react"
+import { ExternalLink, X } from "lucide-react"
 import { INSCRICAO_MODAL_EVENT } from "@/lib/inscricao-modal"
 
-// URL do Google Forms em modo embutido (iframe)
-const GOOGLE_FORM_EMBED_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSe7NQJCzUQBMFzLPqCziuNaRjzm8BI2nTULVW4FaQg7ojODIg/viewform?embedded=true"
+// URL do Google Forms (abre em nova aba, fora do domínio do site)
+const GOOGLE_FORM_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSe7NQJCzUQBMFzLPqCziuNaRjzm8BI2nTULVW4FaQg7ojODIg/viewform"
 
 export function Inscricao() {
   const [open, setOpen] = useState(false)
-  const [iframeLoading, setIframeLoading] = useState(true)
 
   // Abre o modal quando qualquer botão de "Inscrição" dispara o evento global
   useEffect(() => {
@@ -39,10 +38,6 @@ export function Inscricao() {
 
   const handleClose = () => {
     setOpen(false)
-    // Reseta o estado do iframe após a animação de saída
-    setTimeout(() => {
-      setIframeLoading(true)
-    }, 300)
   }
 
   return (
@@ -90,24 +85,20 @@ export function Inscricao() {
               </p>
             </div>
 
-            <div className="relative w-full" style={{ minHeight: iframeLoading ? "400px" : "auto" }}>
-              {iframeLoading && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Loader2 className="w-6 h-6 animate-spin text-foreground/40" />
-                </div>
-              )}
-              <iframe
-                title="Formulário de inscrição"
-                src={GOOGLE_FORM_EMBED_URL}
-                onLoad={() => setIframeLoading(false)}
-                className="w-full"
-                style={{ height: 900, opacity: iframeLoading ? 0 : 1, transition: "opacity 0.3s ease" }}
-                frameBorder={0}
-                marginHeight={0}
-                marginWidth={0}
+            <div className="px-4 sm:px-8 pb-2 flex flex-col items-center gap-4">
+              <p className="text-foreground/80 text-sm text-center leading-relaxed">
+                Preencha o formulário de pré-cadastro. Ele será aberto em uma
+                nova aba, diretamente no Google Forms.
+              </p>
+              <a
+                href={GOOGLE_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-foreground text-background text-sm font-medium px-6 py-3 rounded-full hover:opacity-90 transition-opacity"
               >
-                Carregando…
-              </iframe>
+                Preencher formulário
+                <ExternalLink className="w-4 h-4" />
+              </a>
             </div>
           </motion.div>
         </div>
