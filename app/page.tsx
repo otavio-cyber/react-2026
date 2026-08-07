@@ -5,7 +5,7 @@ import { Statement } from "@/components/statement"
 import { Local } from "@/components/local"
 import { Experiencia } from "@/components/experiencia"
 import { Galeria } from "@/components/galeria"
-// import { Apoio } from "@/components/apoio"
+import { Apoio } from "@/components/apoio"
 // import { CotaDiamond } from "@/components/cota-diamond"
 import { Inscricao } from "@/components/inscricao"
 import { Footer } from "@/components/footer"
@@ -19,6 +19,7 @@ export default function HomePage() {
       <Statement />
       <Local />
       <Experiencia />
+      <Apoio />
       <Galeria />
       <Footer />
       <Inscricao />
