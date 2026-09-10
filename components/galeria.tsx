@@ -133,7 +133,7 @@ export function Galeria() {
           className="text-center mt-12"
         >
           <a
-            href="https://reactbrasil.com.br/evento-2025"
+            href="https://evento2025.reactbrasil.com.br/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block border border-foreground/20 text-foreground px-8 py-4 text-sm tracking-wider uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
