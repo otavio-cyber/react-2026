@@ -18,18 +18,19 @@ const institucional: Sponsor[] = [
   { name: "Ártico Capital", src: "/sponsors/artico-capital.webp", width: 900, height: 103 },
   { name: "Okno Capital", src: "/sponsors/okno-capital.webp", width: 900, height: 432, scale: 0.9 },
   { name: "Strategi Capital", src: "/sponsors/strategi-capital.webp", width: 197, height: 128, scale: 0.9 },
-  { name: "Restore Advisory", src: "/sponsors/restore-advisory.webp", width: 260, height: 66 },
   { name: "Mazzotini Advogados Associados", src: "/sponsors/mazzotini.webp", width: 900, height: 135 },
   { name: "Keppler Advogados Associados", src: "/sponsors/keppler.webp", width: 900, height: 334, scale: 0.9 },
   { name: "Bismarchi Pires Sociedade de Advogados", src: "/sponsors/bismarchi-pires.webp", width: 900, height: 549 },
   { name: "Luiz Trindade ADV Special Sits", src: "/sponsors/luiz-trindade.webp", width: 900, height: 372, scale: 0.9 },
-  { name: "Campana Pacca Advogados", src: "/sponsors/campana-pacca.webp", width: 900, height: 540 },
+  { name: "Campana Pacca Advogados", src: "/sponsors/campana-pacca.webp", width: 900, height: 540, scale: 1.23 },
   { name: "BBMOV Sociedade de Advogados", src: "/sponsors/bbmov.webp", width: 900, height: 260, scale: 0.9 },
 ]
 
-// Apoio (cota 10k)
-const apoio: Sponsor[] = [
+// Apoio Acadêmico
+const apoioAcademico: Sponsor[] = [
+  { name: "Anfac", src: "/sponsors/anfac.webp", width: 250, height: 67 },
   { name: "Multiplica", src: "/sponsors/multiplica.webp", width: 900, height: 177 },
+  { name: "STG Advogados", src: "/sponsors/stg-advogados.webp", width: 900, height: 209 },
 ]
 
 function SponsorLogo({ sponsor }: { sponsor: Sponsor }) {
@@ -78,7 +79,7 @@ export function Apoio() {
             hidden: { opacity: 0 },
             visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
           }}
-          className="mb-14"
+          className="mb-24 md:mb-28"
         >
           
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-6">
@@ -99,10 +100,10 @@ export function Apoio() {
           }}
         >
           <p className="text-base sm:text-lg uppercase tracking-widest text-muted-foreground mb-8 text-center">
-            Apoio
+            Apoio Acadêmico
           </p>
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-6">
-            {apoio.map((sponsor) => (
+            {apoioAcademico.map((sponsor) => (
               <SponsorLogo key={sponsor.name} sponsor={sponsor} />
             ))}
           </div>
