@@ -33,14 +33,19 @@ const apoioAcademico: Sponsor[] = [
   { name: "STG Advogados", src: "/sponsors/stg-advogados.webp", width: 900, height: 209 },
 ]
 
-function SponsorLogo({ sponsor }: { sponsor: Sponsor }) {
+function SponsorLogo({ sponsor, size = "default" }: { sponsor: Sponsor; size?: "default" | "small" }) {
+  const sizeClasses =
+    size === "small"
+      ? "h-8 w-24 sm:h-10 sm:w-28"
+      : "h-20 w-40 sm:h-24 sm:w-48"
+
   return (
     <motion.div
       variants={{
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 },
       }}
-      className="flex items-center justify-center h-20 w-40 sm:h-24 sm:w-48"
+      className={`flex items-center justify-center ${sizeClasses}`}
     >
       <Image
         src={sponsor.src}
@@ -102,9 +107,9 @@ export function Apoio() {
           <p className="text-base sm:text-lg uppercase tracking-widest text-muted-foreground mb-8 text-center">
             Apoio
           </p>
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-6">
+          <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-4">
             {apoioAcademico.map((sponsor) => (
-              <SponsorLogo key={sponsor.name} sponsor={sponsor} />
+              <SponsorLogo key={sponsor.name} sponsor={sponsor} size="small" />
             ))}
           </div>
         </motion.div>

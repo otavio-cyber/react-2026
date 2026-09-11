@@ -19,7 +19,7 @@ const itens: ItemProgramacao[] = [
 
 export function Programacao() {
   return (
-    <section id="programacao" className="py-24 md:py-32 bg-background">
+    <section id="programacao" className="py-24 md:py-32 bg-secondary">
       <div className="mx-auto max-w-3xl px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

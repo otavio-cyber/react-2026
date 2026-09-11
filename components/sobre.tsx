@@ -33,9 +33,9 @@ export function Sobre() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="font-serif text-3xl md:text-4xl font-light text-foreground mb-8 leading-tight text-balance"
+              className="font-serif text-2xl md:text-3xl font-light text-foreground mb-8 leading-tight text-balance"
             >
-              O encontro que antecede o principal congresso da América Latina
+              REACT Brasil — Reestruturação, Ativos, Crédito e Transação Tributária
             </motion.h2>
 
             <motion.p
@@ -45,23 +45,25 @@ export function Sobre() {
               transition={{ delay: 0.2 }}
               className="text-muted-foreground leading-relaxed"
             >
-              O REACT Brasil é um fórum técnico dedicado à reestruturação e transformação
-              empresarial, reunindo profissionais que atuam diretamente nas decisões mais relevantes
-              do setor.
+              O REACT Brasil – Reestruturação, Ativos, Crédito e Transação Tributária é um
+              encontro reservado e altamente qualificado, criado para reunir os principais
+              agentes do ecossistema de reestruturação empresarial, crédito, investimentos em
+              situações especiais e regularização fiscal.
             </motion.p>
           </div>
 
-          {/* Coluna direita: 2º e 3º parágrafos alinhados ao fim */}
-          <div className="flex flex-col justify-end space-y-6 text-muted-foreground leading-relaxed">
+          {/* Coluna direita: parágrafos 2 a 5 */}
+          <div className="flex flex-col justify-center space-y-6 text-muted-foreground leading-relaxed">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
             >
-              Após uma primeira edição que conectou especialistas de diferentes regiões do país,
-              investidores, advogados, gestores e representantes do setor público, o evento evolui
-              em 2026 como um ambiente ainda mais estruturado, focado em profundidade e execução.
+              O evento reúne gestores, investidores, bancos, empresários, advogados, consultores
+              e representantes do setor público para discutir, de forma técnica e prática, os
+              principais desafios e oportunidades envolvendo turnaround, crédito, special
+              situations, ativos, recuperação judicial e transação tributária.
             </motion.p>
 
             <motion.p
@@ -70,8 +72,30 @@ export function Sobre() {
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
             >
-              Mais do que um encontro preparatório para o TMA Brasil, o REACT se consolida como um
-              espaço estratégico, reservado e altamente qualificado.
+              Em 2025, a primeira edição reuniu cerca de 150 participantes de diversos estados.
+              Para 2026, esperamos mais de 200 participantes, mantendo um público selecionado e
+              número limitado de inscrições.
+            </motion.p>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5 }}
+            >
+              A programação será composta por 1 keynote speech, 2 painéis técnicos e jantar de
+              confraternização, combinando conteúdo de alto nível com relacionamento e networking
+              qualificado.
+            </motion.p>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.6 }}
+            >
+              A 2ª edição será no dia 2 de novembro de 2026, no Hotel Tivoli Mofarrej, em São
+              Paulo.
             </motion.p>
           </div>
         </div>
