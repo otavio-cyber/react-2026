@@ -19,11 +19,11 @@ export default function HomePage() {
       <Hero />
       <Sobre />
       <Statement />
-      <Local />
-      <Palestrantes />
       <Programacao />
-      <Experiencia />
+      <Palestrantes />
       <Apoio />
+      <Experiencia />
+      <Local />
       <Galeria />
       <Footer />
       <Inscricao />

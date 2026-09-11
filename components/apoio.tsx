@@ -28,9 +28,9 @@ const institucional: Sponsor[] = [
 
 // Apoio Acadêmico
 const apoioAcademico: Sponsor[] = [
-  { name: "Anfac", src: "/sponsors/anfac.webp", width: 250, height: 67 },
-  { name: "Multiplica", src: "/sponsors/multiplica.webp", width: 900, height: 177 },
-  { name: "STG Advogados", src: "/sponsors/stg-advogados.webp", width: 900, height: 209 },
+  { name: "Anfac", src: "/sponsors/anfac.webp", width: 250, height: 67, scale: 1.05 },
+  { name: "Multiplica", src: "/sponsors/multiplica.webp", width: 900, height: 177, scale: 1.05 },
+  { name: "STG Advogados", src: "/sponsors/stg-advogados.webp", width: 900, height: 209, scale: 1.05 },
 ]
 
 function SponsorLogo({ sponsor, size = "default" }: { sponsor: Sponsor; size?: "default" | "small" }) {
@@ -61,7 +61,7 @@ function SponsorLogo({ sponsor, size = "default" }: { sponsor: Sponsor; size?: "
 
 export function Apoio() {
   return (
-    <section id="apoio" className="py-24 md:py-32 bg-background">
+    <section id="apoio" className="py-24 md:py-32 bg-secondary">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

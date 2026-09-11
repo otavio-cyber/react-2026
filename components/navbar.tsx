@@ -7,10 +7,10 @@ import { Menu, X } from "lucide-react"
 
 const navLinks = [
   { href: "#sobre", label: "Sobre" },
+  { href: "#programacao", label: "Programação" },
   { href: "#palestrantes", label: "Palestrantes" },
   { href: "#apoio", label: "Patrocinadores" },
   { href: "#local", label: "Local" },
-  { href: "#programacao", label: "Programação" },
   { href: "https://evento2025.reactbrasil.com.br", label: "React 2025" },
 ]
 
