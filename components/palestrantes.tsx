@@ -11,13 +11,13 @@ type Palestrante = {
 
 // Ordem alfabética por nome
 const palestrantes: Palestrante[] = [
-  { nome: "Arthur Dias", empresa: "Mazzotini ADV", src: "/palestrantes/arthur-dias.webp" },
+  { nome: "Arthur Dias", empresa: "Mazzotini Advogados", src: "/palestrantes/arthur-dias.webp" },
   { nome: "Carlos Occaso", empresa: "BBMOV", src: "/palestrantes/carlos-occaso.webp" },
   { nome: "Christian Lara", empresa: "Strategi Capital", src: "/palestrantes/christian-lara.webp" },
   { nome: "Daniel Bitman Garcia", empresa: "ADGM", src: "/palestrantes/daniel-bitman-garcia.webp" },
-  { nome: "Gustavo Bismarchi", empresa: "Bismarchi Pires ADV", src: "/palestrantes/gustavo-bismarchi.webp" },
+  { nome: "Gustavo Bismarchi", empresa: "Bismarchi Pires Advogados", src: "/palestrantes/gustavo-bismarchi.webp" },
   { nome: "João Pacca", empresa: "Campana Pacca", src: "/palestrantes/joao-pacca.webp" },
-  { nome: "Luiz Trindade", empresa: "Luiz Trindade ADV", src: "/palestrantes/luiz-trindade.webp" },
+  { nome: "Luiz Trindade", empresa: "Luiz Trindade Advogados", src: "/palestrantes/luiz-trindade.webp" },
   { nome: "Renan Silveira", empresa: "Okno Capital", src: "/palestrantes/renan-silveira.webp" },
   { nome: "Roberto Keppler", empresa: "Keppler", src: "/palestrantes/roberto-keppler.webp" },
   { nome: "Victor Pinelli", empresa: "Ártico Capital", src: "/palestrantes/victor-pinelli.webp" },

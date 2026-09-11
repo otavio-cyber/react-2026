@@ -7,11 +7,11 @@ import { Menu, X } from "lucide-react"
 import { openInscricaoModal } from "@/lib/inscricao-modal"
 
 const navLinks = [
-  { href: "#inicio", label: "Início" },
   { href: "#sobre", label: "Sobre" },
-  { href: "https://evento2025.reactbrasil.com.br", label: "Evento 2025" },
-  { href: "#local", label: "Local e Data" },
-  { href: "#apoio", label: "Apoio Institucional" },
+  { href: "#palestrantes", label: "Palestrantes" },
+  { href: "#apoio", label: "Patrocinadores" },
+  { href: "https://evento2025.reactbrasil.com.br", label: "React 2025" },
+  { href: "#local", label: "Local" },
 ]
 
 export function Navbar() {

@@ -21,7 +21,7 @@ const institucional: Sponsor[] = [
   { name: "Mazzotini Advogados Associados", src: "/sponsors/mazzotini.webp", width: 900, height: 135 },
   { name: "Keppler Advogados Associados", src: "/sponsors/keppler.webp", width: 900, height: 334, scale: 0.9 },
   { name: "Bismarchi Pires Sociedade de Advogados", src: "/sponsors/bismarchi-pires.webp", width: 900, height: 549 },
-  { name: "Luiz Trindade ADV Special Sits", src: "/sponsors/luiz-trindade.webp", width: 900, height: 372, scale: 0.9 },
+  { name: "Luiz Trindade Advogados Special Sits", src: "/sponsors/luiz-trindade.webp", width: 900, height: 372, scale: 0.9 },
   { name: "Campana Pacca Advogados", src: "/sponsors/campana-pacca.webp", width: 900, height: 540, scale: 1.23 },
   { name: "BBMOV Sociedade de Advogados", src: "/sponsors/bbmov.webp", width: 900, height: 260, scale: 0.9 },
 ]
