@@ -100,7 +100,7 @@ export function Apoio() {
           }}
         >
           <p className="text-base sm:text-lg uppercase tracking-widest text-muted-foreground mb-8 text-center">
-            Apoio Acadêmico
+            Apoio
           </p>
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-6">
             {apoioAcademico.map((sponsor) => (

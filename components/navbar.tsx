@@ -9,6 +9,7 @@ import { openInscricaoModal } from "@/lib/inscricao-modal"
 const navLinks = [
   { href: "#sobre", label: "Sobre" },
   { href: "#palestrantes", label: "Palestrantes" },
+  { href: "#programacao", label: "Programação" },
   { href: "#apoio", label: "Patrocinadores" },
   { href: "https://evento2025.reactbrasil.com.br", label: "React 2025" },
   { href: "#local", label: "Local" },

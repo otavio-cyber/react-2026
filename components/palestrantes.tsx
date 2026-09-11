@@ -11,6 +11,7 @@ type Palestrante = {
 
 // Ordem alfabética por nome
 const palestrantes: Palestrante[] = [
+  { nome: "André Rocha", empresa: "Triunfae", src: "/palestrantes/andre-rocha.webp" },
   { nome: "Arthur Dias", empresa: "Mazzotini Advogados", src: "/palestrantes/arthur-dias.webp" },
   { nome: "Carlos Occaso", empresa: "BBMOV", src: "/palestrantes/carlos-occaso.webp" },
   { nome: "Christian Lara", empresa: "Strategi Capital", src: "/palestrantes/christian-lara.webp" },

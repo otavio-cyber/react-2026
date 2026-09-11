@@ -4,6 +4,7 @@ import { Sobre } from "@/components/sobre"
 import { Statement } from "@/components/statement"
 import { Local } from "@/components/local"
 import { Palestrantes } from "@/components/palestrantes"
+import { Programacao } from "@/components/programacao"
 import { Experiencia } from "@/components/experiencia"
 import { Galeria } from "@/components/galeria"
 import { Apoio } from "@/components/apoio"
@@ -20,6 +21,7 @@ export default function HomePage() {
       <Statement />
       <Local />
       <Palestrantes />
+      <Programacao />
       <Experiencia />
       <Apoio />
       <Galeria />
