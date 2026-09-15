@@ -11,7 +11,13 @@ const fadeInUp = {
 
 export function Hero() {
   return (
-    <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    // py-28 reserva o espaço da barra de menu, que é fixa e tem h-20 (80px).
+    // Sem isso, em tela baixa (1366x640, 1280x600) o conteúdo centralizado
+    // subia e a pílula "2ª Edição · 2026" entrava por baixo de "Sobre",
+    // "Programação" e "Palestrantes". Como o padding é simétrico, ele NÃO
+    // desloca nada em tela alta — só impede que o miolo suba demais, deixando
+    // a seção crescer além da janela quando não couber.
+    <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden py-28">
       {/* Background Image */}
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center"
@@ -26,7 +32,9 @@ export function Hero() {
         <motion.div
           {...fadeInUp}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="mb-8"
+          /* Em janela baixa os vãos encolhem, para o botão de inscrição não
+             cair abaixo da dobra depois que o py-28 reservou a barra. */
+          className="mb-8 [@media(max-height:700px)]:mb-4"
         >
           <span className="inline-block border border-white/40 text-white text-xs uppercase tracking-widest px-4 py-2 rounded-full">
             2ª Edição · 2026
@@ -63,7 +71,7 @@ export function Hero() {
         <motion.div
           {...fadeInUp}
           transition={{ delay: 1.1, duration: 0.6 }}
-          className="mb-10 flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-4 text-white/85"
+          className="mb-10 [@media(max-height:700px)]:mb-5 flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-4 text-white/85"
         >
           <span className="text-sm sm:text-base tracking-wide">
             02 de novembro de 2026
