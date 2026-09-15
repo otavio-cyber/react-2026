@@ -6,38 +6,49 @@ import { motion } from "framer-motion"
 type Sponsor = {
   name: string
   src: string
-  width: number
-  height: number
-  // Fator de escala visual (1 = tamanho padrão). Usado para equilibrar
-  // logos que "pesam" mais que os outros por conta da própria arte.
-  scale?: number
 }
 
-// Institucional (cota 30k)
+/**
+ * Os arquivos em /sponsors/norm/ são versões normalizadas dos originais.
+ * O desalinhamento da parede de logos não vinha do CSS: vinha da arte. Cada
+ * arquivo trazia uma quantidade diferente de margem vazia (o Campana Pacca
+ * tinha 208px de nada em cima e embaixo; o Lotus, 870px) e uma proporção
+ * diferente, então a mesma caixa CSS rendia tamanhos aparentes muito
+ * diferentes — e a gente compensava com um `scale` chutado por logo.
+ *
+ * Agora cada arte é recortada na tinta e reescalada para que a ÁREA do desenho
+ * seja a mesma em todos, centralizada numa tela única de 1200x600. É a área, e
+ * não a altura nem a largura, que faz um wordmark comprido e um emblema
+ * quadrado pesarem igual ao olho. Por isso aqui não há mais fator por logo:
+ * é só object-contain. Receita em scratchpad/logos_normalizar.py.
+ */
+
+// Patrocínio Institucional (cota 30k)
 const institucional: Sponsor[] = [
-  { name: "Ártico Capital", src: "/sponsors/artico-capital.webp", width: 900, height: 103 },
-  { name: "Okno Capital", src: "/sponsors/okno-capital.webp", width: 900, height: 432, scale: 0.9 },
-  { name: "Strategi Capital", src: "/sponsors/strategi-capital.webp", width: 197, height: 128, scale: 0.9 },
-  { name: "Mazzotini Advogados Associados", src: "/sponsors/mazzotini.webp", width: 900, height: 135 },
-  { name: "Keppler Advogados Associados", src: "/sponsors/keppler.webp", width: 900, height: 334, scale: 0.9 },
-  { name: "Bismarchi Pires Sociedade de Advogados", src: "/sponsors/bismarchi-pires.webp", width: 900, height: 549 },
-  { name: "Luiz Trindade Advogados Special Sits", src: "/sponsors/luiz-trindade.webp", width: 900, height: 372, scale: 0.9 },
-  { name: "Campana Pacca Advogados", src: "/sponsors/campana-pacca.webp", width: 900, height: 540, scale: 1.23 },
-  { name: "BBMOV Sociedade de Advogados", src: "/sponsors/bbmov.webp", width: 900, height: 260, scale: 0.9 },
+  { name: "Ártico Capital", src: "/sponsors/norm/artico-capital.webp" },
+  { name: "Okno Capital", src: "/sponsors/norm/okno-capital.webp" },
+  { name: "Strategi Capital", src: "/sponsors/norm/strategi-capital.webp" },
+  { name: "Mazzotini Advogados Associados", src: "/sponsors/norm/mazzotini.webp" },
+  { name: "Keppler Advogados Associados", src: "/sponsors/norm/keppler.webp" },
+  { name: "Bismarchi Pires Sociedade de Advogados", src: "/sponsors/norm/bismarchi-pires.webp" },
+  { name: "Luiz Trindade Advogados Special Sits", src: "/sponsors/norm/luiz-trindade.webp" },
+  { name: "Campana Pacca Advogados", src: "/sponsors/norm/campana-pacca.webp" },
+  { name: "BBMOV Sociedade de Advogados", src: "/sponsors/norm/bbmov.webp" },
 ]
 
-// Apoio Acadêmico
-const apoioAcademico: Sponsor[] = [
-  { name: "Anfac", src: "/sponsors/anfac.webp", width: 250, height: 67, scale: 1.05 },
-  { name: "Multiplica", src: "/sponsors/multiplica.webp", width: 900, height: 177, scale: 1.05 },
-  { name: "STG Advogados", src: "/sponsors/stg-advogados.webp", width: 900, height: 209, scale: 1.05 },
+// Apoio
+const apoio: Sponsor[] = [
+  { name: "Anfac", src: "/sponsors/norm/anfac.webp" },
+  { name: "Multiplica", src: "/sponsors/norm/multiplica.webp" },
+  { name: "STG Advogados", src: "/sponsors/norm/stg-advogados.webp" },
+  { name: "Daniele Banco", src: "/sponsors/norm/daniele-banco.webp" },
+  { name: "Lotus", src: "/sponsors/norm/lotus.webp" },
 ]
 
 function SponsorLogo({ sponsor, size = "default" }: { sponsor: Sponsor; size?: "default" | "small" }) {
-  const sizeClasses =
-    size === "small"
-      ? "h-8 w-24 sm:h-10 sm:w-28"
-      : "h-20 w-40 sm:h-24 sm:w-48"
+  // A caixa tem a mesma proporção 2:1 da tela normalizada, então cada logo
+  // ocupa a célula inteira e todos caem no mesmo eixo, sem sobra de um lado só.
+  const largura = size === "small" ? "max-w-[11rem]" : "max-w-[15rem]"
 
   return (
     <motion.div
@@ -45,16 +56,26 @@ function SponsorLogo({ sponsor, size = "default" }: { sponsor: Sponsor; size?: "
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 },
       }}
-      className={`flex items-center justify-center ${sizeClasses}`}
+      /* No celular a grade tem 2 colunas, então numa lista ímpar o último logo
+         fica sozinho na fileira, encostado na esquerda. `last:odd` pega
+         exatamente esse caso (é o último E está em posição ímpar): a célula
+         passa a ocupar as duas colunas e o conteúdo centraliza. O `max-w`
+         devolve a largura de UMA coluna — metade do vão, menos metade do gap
+         de 2rem — senão o órfão sairia maior que os vizinhos, que é o oposto
+         do alinhamento que se quer. Acima de `sm` nada disso se aplica. */
+      className="w-full flex justify-center
+                 last:odd:col-span-2 last:odd:max-w-[calc(50%-1rem)]
+                 sm:last:odd:col-span-1 sm:last:odd:max-w-none"
     >
-      <Image
-        src={sponsor.src}
-        alt={sponsor.name}
-        width={sponsor.width}
-        height={sponsor.height}
-        style={sponsor.scale ? { transform: `scale(${sponsor.scale})` } : undefined}
-        className="max-h-full max-w-full w-auto h-auto object-contain"
-      />
+      <div className={`w-full aspect-2/1 ${largura}`}>
+        <Image
+          src={sponsor.src}
+          alt={sponsor.name}
+          width={1200}
+          height={600}
+          className="w-full h-full object-contain"
+        />
+      </div>
     </motion.div>
   )
 }
@@ -69,9 +90,8 @@ export function Apoio() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          
           <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground">
-            Apoio Institucional
+            Patrocínio Institucional
           </h2>
         </motion.div>
 
@@ -86,8 +106,10 @@ export function Apoio() {
           }}
           className="mb-24 md:mb-28"
         >
-          
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-6">
+          {/* Grade, não flex-wrap: com 9 logos dão 3 fileiras cheias de 3, e
+              cada logo cai numa coluna. No flex-wrap a última fileira ficava
+              centralizada e desencontrada das de cima. */}
+          <div className="mx-auto max-w-5xl grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-8 place-items-center">
             {institucional.map((sponsor) => (
               <SponsorLogo key={sponsor.name} sponsor={sponsor} />
             ))}
@@ -107,8 +129,9 @@ export function Apoio() {
           <p className="text-base sm:text-lg uppercase tracking-widest text-muted-foreground mb-8 text-center">
             Apoio
           </p>
-          <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-4">
-            {apoioAcademico.map((sponsor) => (
+          {/* 5 logos: uma fileira só a partir do desktop. */}
+          <div className="mx-auto max-w-5xl grid grid-cols-2 md:grid-cols-5 gap-x-8 gap-y-6 place-items-center">
+            {apoio.map((sponsor) => (
               <SponsorLogo key={sponsor.name} sponsor={sponsor} size="small" />
             ))}
           </div>

@@ -11,7 +11,9 @@ const navLinks = [
   { href: "#palestrantes", label: "Palestrantes" },
   { href: "#apoio", label: "Patrocinadores" },
   { href: "#local", label: "Local" },
-  { href: "https://evento2025.reactbrasil.com.br", label: "React 2025" },
+  // Antes levava para fora (evento2025.reactbrasil.com.br); agora desce até a
+  // galeria da edição passada, que já vive nesta página.
+  { href: "#galeria", label: "React 2025" },
 ]
 
 export function Navbar() {

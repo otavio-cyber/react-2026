@@ -124,21 +124,30 @@ export function Galeria() {
           </div>
         </motion.div>
 
-        {/* Ver tudo button */}
+        {/* Acervo da edição de 2025. Os dois destinos são os mesmos que o site
+            de 2025 usava: o álbum no Drive e o vídeo no YouTube. */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="text-center mt-12"
+          className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <a
-            href="https://evento2025.reactbrasil.com.br/"
+            href="https://drive.google.com/drive/folders/1-AgqXWOdSR3JQaS0uq-XdmiRcMOP-ceE?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block border border-foreground/20 text-foreground px-8 py-4 text-sm tracking-wider uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
+            className="w-full sm:w-auto text-center border border-foreground/20 text-foreground px-8 py-4 text-sm tracking-wider uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
           >
-            Ver tudo sobre o evento 2025
+            Veja as Fotos
+          </a>
+          <a
+            href="https://www.youtube.com/watch?v=_U1OS09fVv4"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:w-auto text-center border border-foreground/20 text-foreground px-8 py-4 text-sm tracking-wider uppercase hover:bg-foreground hover:text-background transition-colors duration-300"
+          >
+            Confira o Vídeo
           </a>
         </motion.div>
       </div>
