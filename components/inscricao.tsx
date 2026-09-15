@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, type FormEvent, type ChangeEvent } from "react"
+import { useState, useEffect, useRef, type FormEvent, type ChangeEvent } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { X, Loader2, CheckCircle2 } from "lucide-react"
 import { INSCRICAO_MODAL_EVENT } from "@/lib/inscricao-modal"
@@ -46,6 +46,11 @@ export function Inscricao() {
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Identificador desta inscrição. Nasce no primeiro envio e SOBREVIVE ao erro,
+  // para que "tentar de novo" mande o mesmo id e o Apps Script não grave duas
+  // vezes a mesma pessoa. Só zera quando o formulário é reiniciado.
+  const envioIdRef = useRef<string>("")
+
   const resetAll = () => {
     setStep(1)
     setConsentimentoDados(false)
@@ -55,6 +60,15 @@ export function Inscricao() {
     setSubmitting(false)
     setSubmitted(false)
     setError(null)
+    envioIdRef.current = ""
+  }
+
+  /** uuid do navegador, com alternativa para quem não tem crypto.randomUUID. */
+  const novoEnvioId = () => {
+    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+      return crypto.randomUUID()
+    }
+    return `envio-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
   }
 
   // Abre o modal quando qualquer botão de "Inscrição" dispara o evento global
@@ -107,6 +121,8 @@ export function Inscricao() {
     setSubmitting(true)
     setError(null)
 
+    if (!envioIdRef.current) envioIdRef.current = novoEnvioId()
+
     try {
       // Fala com a NOSSA rota (mesma origem). Ela repassa ao Apps Script pelo
       // servidor. Antes o navegador chamava o script.google.com direto e, dentro
@@ -120,6 +136,7 @@ export function Inscricao() {
           consentimentoDados,
           autorizacaoImagem,
           autorizacaoComunicacao,
+          envioId: envioIdRef.current,
         }),
       })
 
