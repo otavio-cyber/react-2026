@@ -1,13 +1,17 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Users, Target, Building2, Sparkles } from "lucide-react"
+import { Users, Target, Building2, Sparkles, Mic, Martini } from "lucide-react"
 
+// Seis blocos em duas fileiras de três. Na ordem em que o dia acontece:
+// abertura, painéis, e encerramento no fim.
 const cards = [
+  { icon: Mic, title: "Keynote speech", subtitle: "Abertura com convidado de honra" },
   { icon: Users, title: "Dois painéis temáticos", subtitle: "Discussões técnicas e diretas" },
   { icon: Target, title: "Foco em execução", subtitle: "Tomada de decisão" },
   { icon: Building2, title: "Especialistas e investidores", subtitle: "Autoridades do setor" },
   { icon: Sparkles, title: "Formato enxuto", subtitle: "Alta curadoria" },
+  { icon: Martini, title: "Coquetel de encerramento", subtitle: "Networking entre os participantes" },
 ]
 
 export function Sobre() {
@@ -100,8 +104,9 @@ export function Sobre() {
           </div>
         </div>
 
-        {/* Cards em linha única */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Seis cards: 2 colunas no celular, 3 a partir do tablet — assim as
+            fileiras ficam sempre cheias, sem card órfão na última linha. */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {cards.map((card, index) => (
             <motion.div
               key={card.title}

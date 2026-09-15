@@ -53,14 +53,30 @@ export function Hero() {
         <motion.p
           {...fadeInUp}
           transition={{ delay: 1.0, duration: 0.6 }}
-          className="text-white/60 max-w-xl mx-auto mb-10 leading-relaxed"
+          className="text-white/60 max-w-xl mx-auto mb-8 leading-relaxed"
         >
           Um encontro reservado para os principais agentes do ecossistema de reestruturação empresarial no Brasil.
         </motion.p>
 
+        {/* Data e local — o traço vertical some no celular, onde as duas
+            informações passam a ocupar uma linha cada. */}
+        <motion.div
+          {...fadeInUp}
+          transition={{ delay: 1.1, duration: 0.6 }}
+          className="mb-10 flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-4 text-white/85"
+        >
+          <span className="text-sm sm:text-base tracking-wide">
+            02 de novembro de 2026
+          </span>
+          <span aria-hidden="true" className="hidden sm:block h-4 w-px bg-white/30" />
+          <span className="text-sm sm:text-base tracking-wide">
+            Hotel Tivoli Mofarrej · São Paulo
+          </span>
+        </motion.div>
+
         <motion.button
           {...fadeInUp}
-          transition={{ delay: 1.2, duration: 0.6 }}
+          transition={{ delay: 1.3, duration: 0.6 }}
           onClick={openInscricaoModal} whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className="border border-white text-white bg-transparent px-8 py-4 text-sm tracking-wider uppercase hover:bg-white hover:text-black transition-all duration-300 shadow-lg hover:shadow-xl"
@@ -70,7 +86,7 @@ export function Hero() {
 
         <motion.p
           {...fadeInUp}
-          transition={{ delay: 1.4, duration: 0.6 }}
+          transition={{ delay: 1.5, duration: 0.6 }}
           className="text-white/40 text-xs tracking-widest uppercase mt-8"
         >
           Evento fechado · Participação sujeita à aprovação
