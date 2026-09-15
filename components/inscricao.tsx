@@ -8,10 +8,9 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-// URL do Google Apps Script (Web App) que grava as respostas na planilha.
-// Substitua pelo link gerado em Extensões > Apps Script > Implantar > App da Web.
-const APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbxLiV5b6HHdaCLIOs95Gz25iK8cM0GyQFvlFd0XEgudPugeBp7wZmPMJb0PEc8s0YdOsA/exec"
+// O endereço do Apps Script agora vive no servidor, em app/api/inscricao/route.ts
+// (e pode ser trocado sem novo build pela variável de ambiente APPS_SCRIPT_URL
+// na Vercel). O navegador não fala mais direto com o Google.
 
 type FormData = {
   nome: string
@@ -109,10 +108,13 @@ export function Inscricao() {
     setError(null)
 
     try {
-      await fetch(APPS_SCRIPT_URL, {
+      // Fala com a NOSSA rota (mesma origem). Ela repassa ao Apps Script pelo
+      // servidor. Antes o navegador chamava o script.google.com direto e, dentro
+      // do iframe do triunfae.com.br, a resposta demorava ou nunca voltava: o
+      // botão ficava girando.
+      const resposta = await fetch("/api/inscricao", {
         method: "POST",
-        // text/plain evita o preflight de CORS no Apps Script
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
           consentimentoDados,
@@ -120,8 +122,19 @@ export function Inscricao() {
           autorizacaoComunicacao,
         }),
       })
+
+      const dados = (await resposta.json().catch(() => null)) as
+        | { result?: string; error?: string }
+        | null
+
+      // Só mostra sucesso se a inscrição foi REALMENTE gravada na planilha.
+      if (!resposta.ok || dados?.result !== "success") {
+        throw new Error(dados?.error || "resposta inesperada do servidor")
+      }
+
       setSubmitted(true)
     } catch (err) {
+      console.error("[inscricao] falha no envio", err)
       setError(
         "Não foi possível enviar sua inscrição agora. Tente novamente em instantes.",
       )
