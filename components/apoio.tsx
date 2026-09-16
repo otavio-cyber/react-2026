@@ -23,16 +23,20 @@ type Sponsor = {
  * é só object-contain. Receita em scratchpad/logos_normalizar.py.
  */
 
-// Patrocínio Institucional (cota 30k)
+// Patrocínio Institucional (cota 30k). A ORDEM é definida pelo cliente e a
+// grade tem 5 colunas, então esta lista é lida como duas fileiras de cinco.
 const institucional: Sponsor[] = [
+  // 1ª fileira
   { name: "Ártico Capital", src: "/sponsors/norm/artico-capital.webp" },
   { name: "Okno Capital", src: "/sponsors/norm/okno-capital.webp" },
-  { name: "Strategi Capital", src: "/sponsors/norm/strategi-capital.webp" },
   { name: "Mazzotini Advogados Associados", src: "/sponsors/norm/mazzotini.webp" },
+  { name: "Strategi Capital", src: "/sponsors/norm/strategi-capital.webp" },
+  { name: "ADGM Banco Securitizadora de Crédito", src: "/sponsors/norm/adgm.webp" },
+  // 2ª fileira
   { name: "Keppler Advogados Associados", src: "/sponsors/norm/keppler.webp" },
+  { name: "Campana Pacca Advogados", src: "/sponsors/norm/campana-pacca.webp" },
   { name: "Bismarchi Pires Sociedade de Advogados", src: "/sponsors/norm/bismarchi-pires.webp" },
   { name: "Luiz Trindade Advogados Special Sits", src: "/sponsors/norm/luiz-trindade.webp" },
-  { name: "Campana Pacca Advogados", src: "/sponsors/norm/campana-pacca.webp" },
   { name: "BBMOV Sociedade de Advogados", src: "/sponsors/norm/bbmov.webp" },
 ]
 
@@ -106,10 +110,10 @@ export function Apoio() {
           }}
           className="mb-24 md:mb-28"
         >
-          {/* Grade, não flex-wrap: com 9 logos dão 3 fileiras cheias de 3, e
-              cada logo cai numa coluna. No flex-wrap a última fileira ficava
-              centralizada e desencontrada das de cima. */}
-          <div className="mx-auto max-w-5xl grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-8 place-items-center">
+          {/* Grade, não flex-wrap: com 10 logos dão 2 fileiras cheias de 5, na
+              ordem pedida, e cada logo cai numa coluna. No flex-wrap a última
+              fileira ficava centralizada e desencontrada da de cima. */}
+          <div className="mx-auto max-w-6xl grid grid-cols-2 md:grid-cols-5 gap-x-8 gap-y-8 place-items-center">
             {institucional.map((sponsor) => (
               <SponsorLogo key={sponsor.name} sponsor={sponsor} />
             ))}
