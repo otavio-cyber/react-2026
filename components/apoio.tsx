@@ -31,7 +31,7 @@ const institucional: Sponsor[] = [
   { name: "Okno Capital", src: "/sponsors/norm/okno-capital.webp" },
   { name: "Mazzotini Advogados Associados", src: "/sponsors/norm/mazzotini.webp" },
   { name: "Strategi Capital", src: "/sponsors/norm/strategi-capital.webp" },
-  { name: "ADGM Banco Securitizadora de Crédito", src: "/sponsors/norm/adgm.webp" },
+  { name: "Grupo ADGM Soluções Financeiras", src: "/sponsors/norm/adgm.webp" },
   // 2ª fileira
   { name: "Keppler Advogados Associados", src: "/sponsors/norm/keppler.webp" },
   { name: "Campana Pacca Advogados", src: "/sponsors/norm/campana-pacca.webp" },
