@@ -14,7 +14,7 @@ const palestrantes: Palestrante[] = [
   { nome: "André Rocha", empresa: "Triunfae", src: "/palestrantes/andre-rocha.webp" },
   { nome: "Arthur Dias", empresa: "Mazzotini", src: "/palestrantes/arthur-dias.webp" },
   { nome: "Carlos Occaso", empresa: "BBMOV", src: "/palestrantes/carlos-occaso.webp" },
-  { nome: "Christian Lara", empresa: "Strategi Capital", src: "/palestrantes/christian-lara.webp" },
+  { nome: "Cristian Lara", empresa: "Strategi Capital", src: "/palestrantes/christian-lara.webp" },
   { nome: "Daniel Bitman Garcia", empresa: "ADGM", src: "/palestrantes/daniel-bitman-garcia.webp" },
   { nome: "Gustavo Bismarchi", empresa: "Bismarchi Pires", src: "/palestrantes/gustavo-bismarchi.webp" },
   { nome: "João Pacca", empresa: "Campana Pacca", src: "/palestrantes/joao-pacca.webp" },
