@@ -9,17 +9,25 @@ import { randomUUID } from "crypto"
  * e o site nunca conferia se a inscrição tinha sido gravada.
  *
  * O PROBLEMA DE TRANSPORTE: a resposta de um web app do Apps Script não volta
- * direto — ela vem por um redirecionamento para script.googleusercontent.com.
- * Esse segundo passo falha com alguma frequência (404, ou demora demais) MESMO
- * com a linha já gravada na planilha. Medido daqui: de 3 envios, 2 não
- * conseguiram ler a resposta e os 3 gravaram. Confiar só na resposta faria o
- * site dizer "erro" para inscrição que entrou, e a pessoa reenviaria: duplicata.
+ * direto — vem por um redirecionamento para script.googleusercontent.com. Esse
+ * segundo passo falha ou demora MESMO com a linha já gravada. Medido em 18/09,
+ * do lado de fora: mediana 1,9s, p95 9,5s, e uma chamada em vinte que pendura
+ * por 40s. Do lado de DENTRO, o painel de Execuções do Apps Script mostra que
+ * toda execução termina em 0,3 a 2,8s — ou seja, a lentidão é 100% transporte.
  *
- * A SOLUÇÃO, nas duas pontas: cada envio leva um `envioId`. O script ignora id
- * repetido (não grava duas vezes) e responde em `doGet?envioId=` se aquele
- * envio foi registrado. Quando a resposta se perde, nós PERGUNTAMOS em vez de
- * chutar. E o formulário reenvia com o MESMO id, então nem a tentativa manual
- * da pessoa duplica.
+ * O CASO QUE MOTIVOU A v3 DESTA ROTA: o Diego Mendes viu "erro" numa inscrição
+ * que ENTROU (planilha, 16/09 21:27:44, linha única, sem ninguém enviando junto).
+ * Duas coisas daqui podiam produzir isso, e as duas foram corrigidas:
+ *
+ *   1. o prazo de consulta era 8s, ABAIXO do p95 de 9,5s do próprio endereço
+ *      consultado: o socorro falhava junto com o que ele deveria socorrer;
+ *   2. quando o script respondia result:'error', esta rota devolvia 502 SEM
+ *      consultar. Se o script quebrasse depois de gravar, era erro na tela com
+ *      linha na planilha — e sem marca, então o reenvio duplicaria.
+ *
+ * Agora o script (v4) marca o envio como `pend` ANTES de gravar e `ok` depois,
+ * então a consulta distingue "em curso" de "não existe" e esta rota sabe
+ * esperar em vez de concluir fracasso.
  */
 
 const APPS_SCRIPT_URL =
@@ -32,22 +40,39 @@ export const maxDuration = 60
 
 const CAMPOS = ["nome", "telefone", "email", "cpf", "empresa", "cargo"] as const
 
-/** Orçamento de tempo. A soma do pior caso tem de caber em `maxDuration`. */
-const PRAZO_ENVIO = 20_000
-const PRAZO_CONSULTA = 8_000
-const ESPERAS_ENTRE_CONSULTAS = [2_000, 4_000] // 20 + 8+2 + 8+4 + 8 = 50s
+/**
+ * Orçamento de tempo. A soma do pior caso tem de caber em `maxDuration`:
+ * 15 + (12+2) + (12+3) + 12 = 56s.
+ * PRAZO_CONSULTA ficou acima do p95 medido (9,5s) de propósito — era ele, em
+ * 8s, que fazia a consulta de socorro falhar justamente quando era necessária.
+ */
+const PRAZO_ENVIO = 15_000
+const PRAZO_CONSULTA = 12_000
+const ESPERAS_ENTRE_CONSULTAS = [2_000, 3_000]
 
-type Resposta = { result?: string; error?: string }
+type Resposta = {
+  result?: string
+  error?: string
+  repetido?: boolean
+  ocupado?: boolean
+}
 
 const dormir = (ms: number) => new Promise((pronto) => setTimeout(pronto, ms))
 
 /**
- * Pergunta ao script se o envio foi registrado. Tenta algumas vezes porque a
- * consulta viaja pelo mesmo caminho que pode ter falhado no envio.
- * `false` só depois de esgotar as tentativas.
+ * Pergunta ao script o que houve com este envio. Três respostas possíveis:
+ *   'entrou'      — está gravado, pode dizer sucesso
+ *   'nao-entrou'  — o script afirma que não conhece este envio
+ *   'sem-resposta'— não conseguimos falar com ele (o transporte falhou de novo)
+ * A diferença entre as duas últimas importa: só a do meio autoriza dizer que
+ * falhou. "Não consegui perguntar" NÃO é "não entrou".
  */
-async function foiRegistrado(envioId: string): Promise<boolean> {
+async function consultarEnvio(
+  envioId: string,
+): Promise<"entrou" | "nao-entrou" | "sem-resposta"> {
   const url = `${APPS_SCRIPT_URL}?envioId=${encodeURIComponent(envioId)}`
+  let ultima: "nao-entrou" | "sem-resposta" = "sem-resposta"
+
   for (let tentativa = 0; tentativa <= ESPERAS_ENTRE_CONSULTAS.length; tentativa++) {
     if (tentativa > 0) await dormir(ESPERAS_ENTRE_CONSULTAS[tentativa - 1])
     try {
@@ -57,14 +82,45 @@ async function foiRegistrado(envioId: string): Promise<boolean> {
         signal: AbortSignal.timeout(PRAZO_CONSULTA),
       })
       const corpo = JSON.parse(await r.text()) as Resposta
-      if (corpo?.result === "success") return true
-      // "nao-encontrado" ainda pode virar "success": a gravação pode estar em
-      // curso, presa na fila do LockService. Só desiste no fim das tentativas.
+      if (corpo?.result === "success") return "entrou"
+      // 'em-curso' = o script está gravando agora; insistir, nunca desistir
+      if (corpo?.result === "nao-encontrado") ultima = "nao-entrou"
     } catch {
-      // a consulta também pode falhar no transporte: tenta de novo
+      // o transporte falhou também; tenta de novo
     }
   }
-  return false
+  return ultima
+}
+
+/** Traduz o desfecho da consulta na resposta ao navegador. */
+function responderPorConsulta(
+  desfecho: "entrou" | "nao-entrou" | "sem-resposta",
+  envioId: string,
+  motivo: string,
+) {
+  if (desfecho === "entrou") {
+    return NextResponse.json({ result: "success", envioId, confirmadoPorConsulta: true })
+  }
+  if (desfecho === "nao-entrou") {
+    console.error("[inscricao] o script confirma que não gravou", { envioId, motivo })
+    return NextResponse.json(
+      { result: "error", error: "Não foi possível registrar sua inscrição. Tente novamente.", envioId },
+      { status: 502 },
+    )
+  }
+  // Não conseguimos nem perguntar. Pode ter entrado. Não mande a pessoa
+  // reenviar como se tivesse falhado — e o envioId é o mesmo se ela reenviar.
+  console.error("[inscricao] sem resposta do script, situação indefinida", { envioId, motivo })
+  return NextResponse.json(
+    {
+      result: "indefinido",
+      error:
+        "Sua inscrição pode ter sido registrada, mas não conseguimos confirmar agora. " +
+        "Aguarde nosso contato antes de enviar de novo.",
+      envioId,
+    },
+    { status: 503 },
+  )
 }
 
 export async function POST(request: Request) {
@@ -114,36 +170,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ result: "success", envioId })
     }
 
-    // O script recusou por um motivo dele (ex.: planilha ocupada).
+    // 'em-curso': outra execução do MESMO envio está gravando. Espera e confirma.
+    if (corpo?.result === "em-curso") {
+      return responderPorConsulta(await consultarEnvio(envioId), envioId, "em-curso")
+    }
+
+    // O script disse que deu erro. ANTES da v4 isto virava 502 direto — e era
+    // um dos jeitos de mostrar erro para uma linha que entrou. Agora pergunta.
     if (corpo?.result === "error") {
-      console.error("[inscricao] o script recusou", { erro: corpo.error, envioId })
-      return NextResponse.json(
-        { result: "error", error: "Não foi possível registrar agora. Tente novamente." },
-        { status: 502 },
-      )
+      console.warn("[inscricao] o script recusou; vou conferir", { erro: corpo.error, envioId })
+      return responderPorConsulta(await consultarEnvio(envioId), envioId, corpo.error || "erro do script")
     }
 
     // Resposta ilegível: a linha PODE ter sido gravada. Pergunta, não chuta.
-    console.warn("[inscricao] resposta ilegível, consultando o envio", {
-      status: resposta.status,
-      envioId,
-    })
-    if (await foiRegistrado(envioId)) {
-      return NextResponse.json({ result: "success", envioId, confirmadoPorConsulta: true })
-    }
-    return NextResponse.json(
-      { result: "error", error: "Não foi possível enviar sua inscrição agora.", envioId },
-      { status: 502 },
-    )
+    console.warn("[inscricao] resposta ilegível, consultando", { status: resposta.status, envioId })
+    return responderPorConsulta(await consultarEnvio(envioId), envioId, `http ${resposta.status}`)
   } catch (erro) {
     // Estouro de prazo ou queda de rede: idem, a linha pode ter entrado.
-    console.error("[inscricao] falha no envio, consultando", { erro: String(erro), envioId })
-    if (await foiRegistrado(envioId)) {
-      return NextResponse.json({ result: "success", envioId, confirmadoPorConsulta: true })
-    }
-    return NextResponse.json(
-      { result: "error", error: "O sistema de inscrições não respondeu. Tente novamente.", envioId },
-      { status: 504 },
-    )
+    console.warn("[inscricao] falha no envio, consultando", { erro: String(erro), envioId })
+    return responderPorConsulta(await consultarEnvio(envioId), envioId, String(erro))
   }
 }
