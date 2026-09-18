@@ -49,7 +49,10 @@ export function Inscricao() {
   // Identificador desta inscrição. Nasce no primeiro envio e SOBREVIVE ao erro,
   // para que "tentar de novo" mande o mesmo id e o Apps Script não grave duas
   // vezes a mesma pessoa. Só zera quando o formulário é reiniciado.
+  // Vai TAMBÉM para o sessionStorage: quem vê erro costuma recarregar a página,
+  // e sem isso o reenvio nasceria com id novo e duplicaria a inscrição.
   const envioIdRef = useRef<string>("")
+  const CHAVE_ENVIO = "react2026:envioId"
 
   const resetAll = () => {
     setStep(1)
@@ -61,6 +64,7 @@ export function Inscricao() {
     setSubmitted(false)
     setError(null)
     envioIdRef.current = ""
+    try { sessionStorage.removeItem(CHAVE_ENVIO) } catch { /* modo anônimo */ }
   }
 
   /** uuid do navegador, com alternativa para quem não tem crypto.randomUUID. */
@@ -69,6 +73,17 @@ export function Inscricao() {
       return crypto.randomUUID()
     }
     return `envio-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
+  }
+
+  /** O id deste envio: o da memória, o que sobreviveu a um recarregamento, ou um novo. */
+  const obterEnvioId = () => {
+    if (envioIdRef.current) return envioIdRef.current
+    let id = ""
+    try { id = sessionStorage.getItem(CHAVE_ENVIO) || "" } catch { /* modo anônimo */ }
+    if (!/^[A-Za-z0-9-]{8,60}$/.test(id)) id = novoEnvioId()
+    envioIdRef.current = id
+    try { sessionStorage.setItem(CHAVE_ENVIO, id) } catch { /* modo anônimo */ }
+    return id
   }
 
   // Abre o modal quando qualquer botão de "Inscrição" dispara o evento global
@@ -121,7 +136,7 @@ export function Inscricao() {
     setSubmitting(true)
     setError(null)
 
-    if (!envioIdRef.current) envioIdRef.current = novoEnvioId()
+    const envioId = obterEnvioId()
 
     try {
       // Fala com a NOSSA rota (mesma origem). Ela repassa ao Apps Script pelo
@@ -136,7 +151,7 @@ export function Inscricao() {
           consentimentoDados,
           autorizacaoImagem,
           autorizacaoComunicacao,
-          envioId: envioIdRef.current,
+          envioId,
         }),
       })
 
@@ -145,11 +160,24 @@ export function Inscricao() {
         | null
 
       // Só mostra sucesso se a inscrição foi REALMENTE gravada na planilha.
-      if (!resposta.ok || dados?.result !== "success") {
-        throw new Error(dados?.error || "resposta inesperada do servidor")
+      if (resposta.ok && dados?.result === "success") {
+        setSubmitted(true)
+        return
       }
 
-      setSubmitted(true)
+      // 'indefinido': o servidor não conseguiu nem confirmar nem desmentir. A
+      // inscrição pode ter entrado — mandar "tente de novo" aqui foi o que fez
+      // gente reenviar uma inscrição que já estava gravada.
+      if (dados?.result === "indefinido") {
+        setError(
+          dados.error ||
+            "Sua inscrição pode ter sido registrada, mas não conseguimos confirmar agora. " +
+              "Aguarde nosso contato antes de enviar de novo.",
+        )
+        return
+      }
+
+      throw new Error(dados?.error || "resposta inesperada do servidor")
     } catch (err) {
       console.error("[inscricao] falha no envio", err)
       setError(
