@@ -136,13 +136,21 @@ export function Inscricao() {
     setSubmitting(true)
     setError(null)
 
-    const envioId = obterEnvioId()
-
     try {
+      // DENTRO do try de propósito. Já estava fora uma vez, e essa é a forma
+      // exata de o botão ficar girando para sempre: qualquer exceção aqui
+      // escapa DEPOIS de setSubmitting(true), o finally nunca roda e a pessoa
+      // fica olhando um botão travado, sem mensagem nenhuma. Foi o mesmo erro
+      // do waitLock fora do try, na primeira versão do Apps Script.
+      const envioId = obterEnvioId()
       // Fala com a NOSSA rota (mesma origem). Ela repassa ao Apps Script pelo
       // servidor. Antes o navegador chamava o script.google.com direto e, dentro
       // do iframe do triunfae.com.br, a resposta demorava ou nunca voltava: o
       // botão ficava girando.
+      // PRAZO NO CLIENTE: sem isto, uma rede de celular que engasga deixa o
+      // fetch pendurado sem fim — o botão gira para sempre e a pessoa diz
+      // "cliquei e não aconteceu nada". O servidor leva no pior caso 56s, então
+      // 75s dá margem e ainda garante que SEMPRE aparece uma resposta na tela.
       const resposta = await fetch("/api/inscricao", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -153,6 +161,7 @@ export function Inscricao() {
           autorizacaoComunicacao,
           envioId,
         }),
+        signal: AbortSignal.timeout(75_000),
       })
 
       const dados = (await resposta.json().catch(() => null)) as
@@ -180,8 +189,17 @@ export function Inscricao() {
       throw new Error(dados?.error || "resposta inesperada do servidor")
     } catch (err) {
       console.error("[inscricao] falha no envio", err)
+      // Estourar o prazo NÃO é o mesmo que falhar: o envio pode ter sido
+      // gravado e só a resposta não ter voltado. Mandar "tente de novo" nesse
+      // caso é o que faz gente reenviar inscrição que já entrou.
+      const estourouPrazo =
+        err instanceof DOMException &&
+        (err.name === "TimeoutError" || err.name === "AbortError")
       setError(
-        "Não foi possível enviar sua inscrição agora. Tente novamente em instantes.",
+        estourouPrazo
+          ? "Sua inscrição pode ter sido registrada, mas a confirmação não chegou. " +
+              "Aguarde nosso contato antes de enviar de novo."
+          : "Não foi possível enviar sua inscrição agora. Tente novamente em instantes.",
       )
     } finally {
       setSubmitting(false)
@@ -465,9 +483,21 @@ export function Inscricao() {
                         {submitting && (
                           <Loader2 className="w-4 h-4 animate-spin" />
                         )}
-                        Enviar inscrição
+                        {/* O RÓTULO MUDA. Antes ele continuava "Enviar
+                            inscrição" com um spinner pequeno ao lado, e gente
+                            relatou "cliquei e não aconteceu nada" — do lado de
+                            fora, um botão com o mesmo texto parece um botão que
+                            não respondeu. */}
+                        {submitting ? "Enviando…" : "Enviar inscrição"}
                       </button>
                     </div>
+
+                    {submitting && (
+                      <p className="text-xs text-muted-foreground text-center">
+                        Estamos confirmando sua inscrição. Isso pode levar até um
+                        minuto — não feche esta janela.
+                      </p>
+                    )}
                   </form>
                 )}
               </>
