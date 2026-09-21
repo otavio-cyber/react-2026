@@ -88,8 +88,16 @@ export function Navbar() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
 
-          {/* Logo — lado esquerdo, mantém espaço sempre */}
-          <div className="w-[126px] flex-shrink-0">
+          {/* Logo — lado esquerdo, mantém espaço sempre.
+              A arte é deitada (5,05:1), então a ALTURA vem da largura da caixa,
+              e a largura é o que dá ou tira legibilidade da tagline.
+              Três faixas, porque o espaço disponível muda muito:
+                celular  — não há menu, só o botão sanduíche: cabe bem largo;
+                md a lg  — é a faixa apertada. Medido em 820px: sobram 45px
+                           entre o logo e o primeiro item do menu, então aqui
+                           alargar empurraria o menu para cima dele;
+                lg+      — sobram 233px, dá para dar presença ao logo. */}
+          <div className="w-[200px] md:w-[126px] lg:w-[260px] flex-shrink-0">
             <AnimatePresence mode="wait">
               {scrolled ? (
                 <motion.a
@@ -102,12 +110,11 @@ export function Navbar() {
                   transition={{ duration: 0.3 }}
                 >
                   <Image
-                    src="/logo-light.png"
+                    src="/logo-deitado.png"
                     alt="REACT Brasil"
-                    width={126}
-                    height={42}
-                    className="h-auto w-auto"
-                    style={{ width: "auto" }}
+                    width={3092}
+                    height={612}
+                    className="w-full h-auto"
                     priority
                   />
                 </motion.a>
@@ -118,12 +125,11 @@ export function Navbar() {
                   className="opacity-0 pointer-events-none"
                 >
                   <Image
-                    src="/logo-light.png"
+                    src="/logo-deitado.png"
                     alt=""
-                    width={126}
-                    height={42}
-                    className="h-auto w-auto"
-                    style={{ width: "auto" }}
+                    width={3092}
+                    height={612}
+                    className="w-full h-auto"
                     priority
                   />
                 </motion.div>
