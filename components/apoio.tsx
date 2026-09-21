@@ -47,6 +47,7 @@ const apoio: Sponsor[] = [
   { name: "STG Advogados", src: "/sponsors/norm/stg-advogados.webp" },
   { name: "Daniele Banco", src: "/sponsors/norm/daniele-banco.webp" },
   { name: "Lotus", src: "/sponsors/norm/lotus.webp" },
+  { name: "Smoney Securitizadora", src: "/sponsors/norm/smoney.webp" },
 ]
 
 function SponsorLogo({ sponsor, size = "default" }: { sponsor: Sponsor; size?: "default" | "small" }) {
@@ -133,8 +134,10 @@ export function Apoio() {
           <p className="text-base sm:text-lg uppercase tracking-widest text-muted-foreground mb-8 text-center">
             Apoio
           </p>
-          {/* 5 logos: uma fileira só a partir do desktop. */}
-          <div className="mx-auto max-w-5xl grid grid-cols-2 md:grid-cols-5 gap-x-8 gap-y-6 place-items-center">
+          {/* 6 logos: fileiras sempre cheias — 2 no celular, 3 no tablet e uma
+              fileira só no desktop. O bloco vai a max-w-6xl para as 6 colunas
+              não espremerem cada logo. */}
+          <div className="mx-auto max-w-6xl grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-8 gap-y-6 place-items-center">
             {apoio.map((sponsor) => (
               <SponsorLogo key={sponsor.name} sponsor={sponsor} size="small" />
             ))}
