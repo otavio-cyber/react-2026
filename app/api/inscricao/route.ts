@@ -51,6 +51,18 @@ import { randomUUID } from "crypto"
  * O único jeito de um 302 não corresponder a uma linha é o script ter lançado
  * exceção antes de gravar — e nesse caso ele APAGA a marca do envio, então o
  * passo 4 devolve `nao-encontrado` e a pessoa vê erro de verdade.
+ *
+ * ── E QUANDO NEM O 302 CHEGA ─────────────────────────────────────────────────
+ *
+ * Nas 40 sondas a perna 1 não falhou nenhuma vez, mas martelando o endereço ao
+ * vivo (12 POSTs concorrentes logo depois de outras 80 chamadas) o Google
+ * estrangula e ela falha também: 1 em 12. Aí não há prova de que o script
+ * rodou — e a resposta cautelosa "pode ter sido registrada" volta a aparecer.
+ *
+ * Para esse caso o envio é REFEITO uma vez. Isso é seguro porque o `envioId`
+ * torna o envio idempotente: se a primeira tentativa gravou, a segunda devolve
+ * `repetido` sem acrescentar linha; se ela não gravou, a segunda grava. Foi
+ * medido: 12 reenvios do mesmo id não criaram nenhuma linha nova.
  */
 
 const APPS_SCRIPT_URL =
@@ -64,17 +76,21 @@ export const maxDuration = 60
 const CAMPOS = ["nome", "telefone", "email", "cpf", "empresa", "cargo"] as const
 
 /**
- * Orçamento de tempo. O pior caso tem de caber em `maxDuration` (60s):
- * 15 + 6 + (10 + 2 + 10) = 43s.
+ * Orçamento de tempo. Os dois piores caminhos têm de caber em `maxDuration`
+ * (60s), e cabem:
+ *
+ *   rodou, recibo perdido, consulta insiste:  12 + 5 + (8 + 2 + 8) = 35s
+ *   duas tentativas sem 302, consultando:     (12 + 5 + 8) × 2     = 50s
  *
  * PRAZO_ENVIO cobre só a perna 1, cujo máximo medido foi 11,9s.
  * PRAZO_RECIBO é curto de propósito: o recibo chega em 0,31s na mediana, e
  * quando não chega ele custa 60s. Não vale a pena esperar por ele.
  */
-const PRAZO_ENVIO = 15_000
-const PRAZO_RECIBO = 6_000
-const PRAZO_CONSULTA = 10_000
+const PRAZO_ENVIO = 12_000
+const PRAZO_RECIBO = 5_000
+const PRAZO_CONSULTA = 8_000
 const ESPERAS_ENTRE_CONSULTAS = [2_000]
+const TENTATIVAS_DE_ENVIO = 2
 
 type Resposta = {
   result?: string
@@ -95,12 +111,14 @@ const dormir = (ms: number) => new Promise((pronto) => setTimeout(pronto, ms))
  */
 async function consultarEnvio(
   envioId: string,
+  insistir = true,
 ): Promise<"entrou" | "nao-entrou" | "sem-resposta"> {
   const url = `${APPS_SCRIPT_URL}?envioId=${encodeURIComponent(envioId)}`
+  const esperas = insistir ? ESPERAS_ENTRE_CONSULTAS : []
   let ultima: "nao-entrou" | "sem-resposta" = "sem-resposta"
 
-  for (let tentativa = 0; tentativa <= ESPERAS_ENTRE_CONSULTAS.length; tentativa++) {
-    if (tentativa > 0) await dormir(ESPERAS_ENTRE_CONSULTAS[tentativa - 1])
+  for (let tentativa = 0; tentativa <= esperas.length; tentativa++) {
+    if (tentativa > 0) await dormir(esperas[tentativa - 1])
     try {
       const r = await fetch(url, {
         method: "GET",
@@ -208,81 +226,34 @@ export async function POST(request: Request) {
   const enviado = typeof dados.envioId === "string" ? dados.envioId.trim() : ""
   const envioId = /^[A-Za-z0-9-]{8,60}$/.test(enviado) ? enviado : randomUUID()
 
-  let recebeu302 = false
-  try {
-    // PERNA 1 — o script roda aqui. Parar no 302 é o ponto de toda a correção.
-    const resposta = await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ ...dados, envioId }),
-      redirect: "manual",
-      cache: "no-store",
-      signal: AbortSignal.timeout(PRAZO_ENVIO),
-    })
+  let ultimoMotivo = ""
+  for (let n = 1; n <= TENTATIVAS_DE_ENVIO; n++) {
+    const tentativa = await enviarUmaVez(dados, envioId)
 
-    const ehRedirect =
-      (resposta.status >= 300 && resposta.status < 400) || resposta.type === "opaqueredirect"
-
-    if (!ehRedirect) {
-      // Sem redirect: ou o script respondeu direto (não acontece no /exec), ou
-      // o Google devolveu erro antes de rodar. Lê o que der e deixa o
-      // desfecho decidir — se não rodou, a consulta dirá 'nao-encontrado'.
-      let corpo: Resposta | null = null
-      try {
-        corpo = JSON.parse(await resposta.text()) as Resposta
-      } catch {
-        corpo = null
-      }
-      if (corpo?.result) return desfechoDepoisDo302(envioId, corpo)
-      console.warn("[inscricao] perna 1 sem redirect e sem corpo", { status: resposta.status, envioId })
-      return responderSemPerna1(envioId, `http ${resposta.status}`)
+    if (tentativa.tipo === "rodou") {
+      return desfechoDepoisDo302(envioId, tentativa.recibo)
     }
 
-    recebeu302 = true
-    const destino = resposta.headers.get("location")
-
-    // PERNA 2 — só o recibo. Prazo curto: quando ele falha, custa 60s.
-    let recibo: Resposta | null = null
-    if (destino) {
-      try {
-        const r2 = await fetch(destino, {
-          method: "GET",
-          cache: "no-store",
-          signal: AbortSignal.timeout(PRAZO_RECIBO),
-        })
-        recibo = JSON.parse(await r2.text()) as Resposta
-      } catch {
-        // O 404 de 60s, ou o estouro do prazo. Esperado em ~10% dos envios.
-        console.warn("[inscricao] recibo perdido; sigo pelo 302", { envioId })
-      }
+    // Nem o 302 chegou: não há prova de que o script rodou. Pergunta antes de
+    // repetir — pode ter rodado e só a resposta ter se perdido.
+    ultimoMotivo = tentativa.motivo
+    console.warn("[inscricao] perna 1 falhou", { envioId, tentativa: n, motivo: ultimoMotivo })
+    const conferido = await consultarEnvio(envioId, false)
+    if (conferido === "entrou") {
+      return sucesso(envioId, `consulta-sem-302-${n}`)
     }
+    if (conferido === "nao-entrou" && n === TENTATIVAS_DE_ENVIO) {
+      console.error("[inscricao] o script confirma que não gravou", { envioId, motivo: ultimoMotivo })
+      return NextResponse.json(
+        { result: "error", error: "Não foi possível registrar sua inscrição. Tente novamente.", envioId },
+        { status: 502 },
+      )
+    }
+    // 'nao-entrou' na primeira volta, ou 'sem-resposta': refaz o envio. É
+    // seguro — o envioId é o mesmo, então gravar duas vezes é impossível.
+  }
 
-    return desfechoDepoisDo302(envioId, recibo)
-  } catch (erro) {
-    // Estouro de prazo ou queda de rede ANTES do 302: não sabemos se rodou.
-    console.warn("[inscricao] falha na perna 1, consultando", { erro: String(erro), envioId, recebeu302 })
-    return responderSemPerna1(envioId, String(erro))
-  }
-}
-
-/**
- * Nem o 302 chegou — em 40 sondas isso não aconteceu nenhuma vez, mas se
- * acontecer não há nada provando que o script rodou. Só a consulta decide, e
- * na dúvida a resposta é a cautelosa: pode ter entrado, não reenvie.
- */
-async function responderSemPerna1(envioId: string, motivo: string) {
-  const conferido = await consultarEnvio(envioId)
-  if (conferido === "entrou") {
-    return sucesso(envioId, "consulta-sem-302")
-  }
-  if (conferido === "nao-entrou") {
-    console.error("[inscricao] o script confirma que não gravou", { envioId, motivo })
-    return NextResponse.json(
-      { result: "error", error: "Não foi possível registrar sua inscrição. Tente novamente.", envioId },
-      { status: 502 },
-    )
-  }
-  console.error("[inscricao] sem 302 e sem consulta, situação indefinida", { envioId, motivo })
+  console.error("[inscricao] duas tentativas sem 302 e sem consulta", { envioId, motivo: ultimoMotivo })
   return NextResponse.json(
     {
       result: "indefinido",
@@ -293,4 +264,65 @@ async function responderSemPerna1(envioId: string, motivo: string) {
     },
     { status: 503 },
   )
+}
+
+type Tentativa =
+  /** o 302 chegou: o script rodou. `recibo` é null quando o echo se perdeu. */
+  | { tipo: "rodou"; recibo: Resposta | null }
+  /** nem o 302 chegou: nada prova que o script rodou. */
+  | { tipo: "nao-rodou"; motivo: string }
+
+/** Uma passada pelas duas pernas. Não decide nada, só relata o que houve. */
+async function enviarUmaVez(
+  dados: Record<string, unknown>,
+  envioId: string,
+): Promise<Tentativa> {
+  let resposta: Response
+  try {
+    // PERNA 1 — o script roda aqui. Parar no 302 é o ponto de toda a correção.
+    resposta = await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ ...dados, envioId }),
+      redirect: "manual",
+      cache: "no-store",
+      signal: AbortSignal.timeout(PRAZO_ENVIO),
+    })
+  } catch (erro) {
+    return { tipo: "nao-rodou", motivo: String(erro) }
+  }
+
+  const ehRedirect =
+    (resposta.status >= 300 && resposta.status < 400) || resposta.type === "opaqueredirect"
+
+  if (!ehRedirect) {
+    // Sem redirect: ou o script respondeu direto (não acontece no /exec), ou o
+    // Google devolveu erro antes de rodar. Se veio um corpo com `result`, o
+    // script rodou e isto é o recibo; senão, não há prova de nada.
+    try {
+      const corpo = JSON.parse(await resposta.text()) as Resposta
+      if (corpo?.result) return { tipo: "rodou", recibo: corpo }
+    } catch {
+      // corpo ilegível
+    }
+    return { tipo: "nao-rodou", motivo: `http ${resposta.status}` }
+  }
+
+  const destino = resposta.headers.get("location")
+
+  // PERNA 2 — só o recibo. Prazo curto: quando ele falha, custa 60s.
+  if (destino) {
+    try {
+      const r2 = await fetch(destino, {
+        method: "GET",
+        cache: "no-store",
+        signal: AbortSignal.timeout(PRAZO_RECIBO),
+      })
+      return { tipo: "rodou", recibo: JSON.parse(await r2.text()) as Resposta }
+    } catch {
+      // O 404 de 60s, ou o estouro do prazo. Esperado em ~10% dos envios.
+      console.warn("[inscricao] recibo perdido; sigo pelo 302", { envioId })
+    }
+  }
+  return { tipo: "rodou", recibo: null }
 }
