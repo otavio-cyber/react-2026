@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, type FormEvent, type ChangeEvent } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, Loader2, CheckCircle2 } from "lucide-react"
+import { X, Loader2, CheckCircle2, MessageCircle } from "lucide-react"
 import { INSCRICAO_MODAL_EVENT } from "@/lib/inscricao-modal"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
@@ -30,6 +30,32 @@ const EMPTY_FORM: FormData = {
   cargo: "",
 }
 
+/**
+ * QUANDO O ENVIO NÃO SE CONFIRMA, A PESSOA PRECISA DE UMA SAÍDA.
+ *
+ * O transporte do Apps Script perde o recibo de uma parte dos envios (a linha
+ * entra na planilha, o comprovante se perde). A rota do servidor já cobre a
+ * maioria desses casos sozinha, mas quando nem ela consegue confirmar, o que
+ * sobrava era pedir para a pessoa esperar — e ela ficava sem saber se estava
+ * inscrita. Agora sobra um caminho humano: falar com a organização.
+ *
+ * A mensagem do WhatsApp já vai pronta, com os dados digitados e o código do
+ * envio, para que dê para achar a linha na planilha sem perguntar nada.
+ */
+const WHATSAPP_NUMERO = "5516994193437"
+const WHATSAPP_ROTULO = "(16) 99419-3437"
+
+const AVISO_SEM_CONFIRMACAO =
+  "O envio das suas informações demorou mais do que o esperado. " +
+  "Por favor confirme sua inscrição no número:"
+
+type Falha = {
+  /** O texto mostrado em vermelho, acima do botão. */
+  texto: string
+  /** Mostra o botão do WhatsApp? Só não mostra em erro de preenchimento. */
+  whatsapp: boolean
+}
+
 export function Inscricao() {
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState<1 | 2>(1)
@@ -44,7 +70,7 @@ export function Inscricao() {
 
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<Falha | null>(null)
 
   // Identificador desta inscrição. Nasce no primeiro envio e SOBREVIVE ao erro,
   // para que "tentar de novo" mande o mesmo id e o Apps Script não grave duas
@@ -84,6 +110,30 @@ export function Inscricao() {
     envioIdRef.current = id
     try { sessionStorage.setItem(CHAVE_ENVIO, id) } catch { /* modo anônimo */ }
     return id
+  }
+
+  /**
+   * Conversa do WhatsApp já escrita: quem não recebeu confirmação só precisa
+   * apertar enviar. Vão os seis campos que a pessoa acabou de digitar e o
+   * código do envio — é por ele que se acha a linha na planilha, mesmo que a
+   * inscrição tenha entrado e só o recibo tenha se perdido.
+   */
+  const linkWhatsApp = () => {
+    const linhas = [
+      "Olá! Tentei me inscrever no REACT 2026 pelo site e não recebi a confirmação.",
+      "Podem verificar se minha inscrição foi registrada?",
+      "",
+      `Nome: ${formData.nome}`,
+      `E-mail: ${formData.email}`,
+      `Telefone: ${formData.telefone}`,
+      `CPF: ${formData.cpf}`,
+      `Empresa: ${formData.empresa}`,
+      `Cargo: ${formData.cargo}`,
+    ]
+    if (envioIdRef.current) {
+      linhas.push("", `Código do envio: ${envioIdRef.current}`)
+    }
+    return `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(linhas.join("\n"))}`
   }
 
   // Abre o modal quando qualquer botão de "Inscrição" dispara o evento global
@@ -178,11 +228,7 @@ export function Inscricao() {
       // inscrição pode ter entrado — mandar "tente de novo" aqui foi o que fez
       // gente reenviar uma inscrição que já estava gravada.
       if (dados?.result === "indefinido") {
-        setError(
-          dados.error ||
-            "Sua inscrição pode ter sido registrada, mas não conseguimos confirmar agora. " +
-              "Aguarde nosso contato antes de enviar de novo.",
-        )
+        setError({ texto: AVISO_SEM_CONFIRMACAO, whatsapp: true })
         return
       }
 
@@ -195,12 +241,16 @@ export function Inscricao() {
       const estourouPrazo =
         err instanceof DOMException &&
         (err.name === "TimeoutError" || err.name === "AbortError")
-      setError(
-        estourouPrazo
-          ? "Sua inscrição pode ter sido registrada, mas a confirmação não chegou. " +
-              "Aguarde nosso contato antes de enviar de novo."
-          : "Não foi possível enviar sua inscrição agora. Tente novamente em instantes.",
-      )
+      // Nos dois casos oferece o WhatsApp. No estouro de prazo porque a
+      // inscrição pode ter entrado; no erro seco porque a pessoa não pode
+      // ficar sem caminho nenhum depois de preencher tudo.
+      setError({
+        texto: estourouPrazo
+          ? AVISO_SEM_CONFIRMACAO
+          : "Não foi possível enviar sua inscrição agora. Tente novamente em " +
+            "instantes ou fale com a gente no número:",
+        whatsapp: true,
+      })
     } finally {
       setSubmitting(false)
     }
@@ -462,9 +512,25 @@ export function Inscricao() {
                     </div>
 
                     {error && (
-                      <p className="text-sm text-destructive text-center">
-                        {error}
-                      </p>
+                      <div className="flex flex-col items-center gap-3">
+                        <p className="text-sm text-destructive text-center">
+                          {error.texto}
+                        </p>
+                        {error.whatsapp && (
+                          /* O número É o botão: abre o WhatsApp com a conversa
+                             já escrita. target _blank porque o site roda dentro
+                             do iframe do triunfae.com.br e não pode sair dele. */
+                          <a
+                            href={linkWhatsApp()}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center gap-2 w-full bg-[#25D366] text-white text-sm font-semibold px-6 py-3 rounded-full hover:opacity-90 transition-opacity"
+                          >
+                            <MessageCircle className="w-4 h-4" />
+                            {WHATSAPP_ROTULO}
+                          </a>
+                        )}
+                      </div>
                     )}
 
                     <div className="flex items-center gap-3 pt-2">

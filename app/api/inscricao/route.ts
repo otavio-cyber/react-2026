@@ -258,8 +258,8 @@ export async function POST(request: Request) {
     {
       result: "indefinido",
       error:
-        "Sua inscrição pode ter sido registrada, mas não conseguimos confirmar agora. " +
-        "Aguarde nosso contato antes de enviar de novo.",
+        "O envio das suas informações demorou mais do que o esperado. " +
+        "Por favor confirme sua inscrição no número (16) 99419-3437.",
       envioId,
     },
     { status: 503 },
